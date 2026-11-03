@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>“Only connect!”</title>
+<meta name="description" content="A literary word-grouping puzzle. Link four books, authors, and characters at a time.">
+<meta name="theme-color" content="#ece3d0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@500;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+<style>
+:root{--red:#d00000;--amber:#ffba08;--blue:#3f88c5;--navy:#032b43;--teal:#136f63;
+--page:#ece3d0;--page2:#e0d4ba;--ink:#032b43;--muted:#586c76;--line:#c9bb99;--cover:#fffaf0;--btn:#032b43;--btnink:#fffaf0;
+--disp:'Playfair Display',Georgia,'Times New Roman',serif;--bw:min(100%,500px)}
+@supports (width:1dvh){:root{--bw:min(100%,500px,max(calc((100dvh - 330px)/1.25),340px))}}
+@media (prefers-color-scheme:dark){:root{--page:#08161f;--page2:#0e2431;--ink:#f3ead6;--muted:#9fb3bc;--line:#1f3b4c;--btn:#f3ead6;--btnink:#08161f}}
+*{box-sizing:border-box}
+body{margin:0;color:var(--ink);background:var(--page) repeating-linear-gradient(0deg,rgba(3,43,67,.035) 0 1px,transparent 1px 4px);font:17px/1.35 'EB Garamond',Georgia,'Times New Roman',serif;min-height:100vh;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+.app{max-width:580px;margin:0 auto;padding:10px 12px 28px}
+header{display:flex;align-items:center;justify-content:space-between;gap:8px;border-bottom:3px double var(--line);padding:6px 0 10px;margin-bottom:14px}
+h1{font:900 clamp(1.5rem,6.2vw,2.1rem)/1.05 var(--disp);margin:0;letter-spacing:.01em}
+h1::before,.ribbon::before{content:"";background:var(--red);clip-path:polygon(0 0,100% 0,100% 100%,50% 78%,0 100%)}
+h1::before{display:inline-block;width:.42em;height:.95em;margin-right:.3em;vertical-align:-.08em}
+.epigraph{margin:4px 0 0;font-size:.95rem;font-style:italic;line-height:1.3;max-width:34em}#gameLabel{margin:4px 0 0;font-size:.9rem;color:var(--muted);font-style:italic}
+.hbtns{display:flex;gap:6px}
+.icon-btn{width:40px;height:40px;border-radius:50%;border:2px solid var(--ink);background:transparent;color:var(--ink);font:700 1.05rem var(--disp);cursor:pointer}
+.icon-btn:hover{background:var(--page2)}
+button:focus-visible,dialog:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
+#prompt{text-align:center;margin:0 0 14px;font-size:1.1rem;font-style:italic}
+#stage{width:var(--bw);margin:0 auto;display:flex;flex-direction:column;gap:9px}
+.solved{position:relative;border-radius:4px 9px 9px 4px;padding:12px 12px 12px 26px;text-align:center;min-height:4.6rem;display:flex;flex-direction:column;justify-content:center;box-shadow:inset 0 0 0 2px rgba(255,250,240,.5),0 5px 9px -4px rgba(3,43,67,.6);animation:pop .35s ease-out}
+.solved::before{content:"";position:absolute;left:0;top:0;bottom:0;width:15px;border-radius:4px 0 0 4px;background:linear-gradient(90deg,rgba(0,0,0,.32),rgba(0,0,0,.06));box-shadow:inset -2px 0 0 rgba(255,250,240,.45)}
+.solved h3{margin:0 0 2px;font:700 clamp(.92rem,3.7vw,1.12rem)/1.15 var(--disp)}
+.solved p{margin:0;font-size:clamp(.95rem,3.6vw,1.1rem);font-style:italic;line-height:1.2}
+.c0{background:var(--amber);color:#01182a}.c1{background:var(--blue);color:#01182a}.c2{background:var(--teal);color:#fffaf0}.c3{background:var(--navy);color:#fffaf0}
+#board{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px 10px;padding:8px 5px 6px 0}
+.tile{position:relative;isolation:isolate;display:block;width:100%;aspect-ratio:5/6;padding:0;border:0;background:none;cursor:pointer;color:var(--navy);touch-action:manipulation;-webkit-tap-highlight-color:transparent;transition:transform .2s cubic-bezier(.3,1.5,.5,1)}
+.pages{position:absolute;inset:3px -4px -4px 5px;z-index:-1;border-radius:2px 9px 9px 2px;background:#f4ecd6;box-shadow:2px 2px 0 #d6caa9,3px 3px 0 #f7f0dd}
+.face{position:absolute;inset:0;overflow:hidden;display:flex;flex-direction:column;border-radius:3px 8px 8px 3px;background:var(--cover);box-shadow:inset 0 0 0 1px rgba(3,43,67,.28),0 6px 9px -4px rgba(3,43,67,.55);transition:box-shadow .2s}
+.face::before{content:"";position:absolute;left:0;top:0;bottom:0;width:11%;background:linear-gradient(90deg,transparent 0 60%,var(--amber) 60% 68%,transparent 68% 79%,var(--amber) 79% 83%,transparent 83%),linear-gradient(90deg,#021d2e,var(--navy) 55%,#0b4569)}
+.face::after{content:"";position:absolute;left:20%;right:9%;bottom:9%;height:3px;border-top:1px solid rgba(3,43,67,.45);border-bottom:1px solid rgba(3,43,67,.3)}
+.orn{flex:0 0 17%;display:flex;align-items:center;gap:4px;margin:0 9% 0 20%}
+.orn::before,.orn::after{content:"";flex:1;height:1px;background:rgba(3,43,67,.45)}
+.orn i{width:6px;height:6px;transform:rotate(45deg);background:var(--amber);border:1px solid var(--navy)}
+.ttl{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:0 9% 15% 20%}
+.label{display:block;max-width:100%;font:700 clamp(.8rem,3.4vw,1.05rem)/1.05 'EB Garamond',Georgia,serif;overflow-wrap:break-word;hyphens:auto;-webkit-hyphens:auto}
+@media (hover:hover){.tile:hover{transform:translateY(-3px)}}
+.tile[aria-pressed="true"]{transform:translateY(-6px) rotate(-1.2deg);z-index:2}
+.tile[aria-pressed="true"] .face{box-shadow:0 0 0 3px var(--amber),0 13px 16px -6px rgba(3,43,67,.6)}
+.ribbon{position:absolute;top:-12px;right:12%;width:22%;height:58%;z-index:3;pointer-events:none;opacity:0;transform:translateY(-120%);transition:transform .28s cubic-bezier(.2,1.25,.4,1),opacity .12s;filter:drop-shadow(0 3px 2px rgba(0,0,0,.4))}
+.ribbon::before{position:absolute;inset:0;background:linear-gradient(90deg,#a40000,var(--red) 35%,#e61a1a 55%,var(--red) 75%,#a40000)}
+.ribbon::after{content:"";position:absolute;left:50%;top:8%;bottom:28%;border-left:1px dashed rgba(255,255,255,.5)}
+.tile[aria-pressed="true"] .ribbon{opacity:1;transform:none}
+.tile.bounce{animation:bounce .45s ease}.tile.shake{animation:shake .45s ease}
+#msg{min-height:1.5rem;text-align:center;margin:14px 0 2px;font-size:1.05rem;font-weight:700;font-style:italic}
+#mistakes{display:flex;align-items:center;justify-content:center;gap:9px;margin:4px 0 14px}
+#dots{display:inline-flex;gap:6px}
+.dot{position:relative;width:18px;height:18px;transition:transform .25s,opacity .25s}.dot::before,.dot::after{content:"";position:absolute;left:50%;top:50%;width:100%;height:4px;border-radius:2px;background:var(--red);transform:translate(-50%,-50%) rotate(45deg)}.dot::after{transform:translate(-50%,-50%) rotate(-45deg)}.dot.lost{opacity:.2;transform:scale(.75);filter:grayscale(1)}
+#controls{display:flex;flex-wrap:wrap;gap:9px;justify-content:center}
+.btn{font:700 1rem var(--disp);letter-spacing:.02em;padding:12px 20px;border-radius:999px;cursor:pointer;border:2px solid var(--btn);background:transparent;color:var(--ink);touch-action:manipulation}
+.btn:hover:not(:disabled){background:var(--page2)}.btn:disabled{opacity:.4;cursor:default}
+.btn.primary{background:var(--btn);color:var(--btnink)}.btn.primary:hover:not(:disabled){background:var(--btn);opacity:.88}
+#toast{position:fixed;left:50%;top:calc(env(safe-area-inset-top) + 70px);transform:translateX(-50%);background:var(--navy);color:#fffaf0;border:2px solid var(--amber);padding:10px 16px;border-radius:8px;font-weight:700;opacity:0;pointer-events:none;transition:opacity .2s;z-index:50;max-width:90vw;text-align:center}
+#toast.show{opacity:1}
+dialog{border:3px double var(--line);border-radius:14px;padding:0;background:var(--page);color:var(--ink);width:min(440px,92vw);max-height:88vh;overflow:auto;box-shadow:0 14px 40px rgba(0,0,0,.4)}
+dialog::backdrop{background:rgba(2,20,32,.65)}
+.dlg{padding:22px 20px 20px;position:relative}
+.dlg h2{font:900 1.6rem var(--disp);margin:0 0 10px;text-align:center}
+.dlg h4{margin:18px 0 8px;font:700 .8rem var(--disp);text-transform:uppercase;letter-spacing:.1em;color:var(--muted);text-align:center}
+.dlg p,.dlg li{line-height:1.4;font-size:1.05rem}.dlg ul{padding-left:20px;margin:8px 0}
+.close{position:absolute;top:8px;right:8px;width:36px;height:36px;border:0;background:transparent;color:var(--ink);font-size:1.6rem;cursor:pointer;border-radius:50%}
+.close:hover{background:var(--page2)}
+.stats{display:flex;justify-content:space-around;text-align:center}.stats b{display:block;font:900 1.8rem var(--disp)}.stats small{font-size:.85rem;color:var(--muted);display:block;max-width:80px;margin:0 auto}
+#sharePreview{font:1.25rem/1.35 "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif;text-align:center;white-space:pre-wrap;background:var(--page2);border-radius:10px;padding:12px;margin:10px 0;user-select:all;-webkit-user-select:all}
+#sharePreview .f{font:1.1rem/1.4 'EB Garamond',Georgia,serif;display:block}#sharePreview .t{font:700 1rem var(--disp);display:block;margin-bottom:6px}#sharePreview .u{font:.8rem 'EB Garamond',serif;display:block;margin-top:6px;color:var(--muted);word-break:break-all}
+#countdown{text-align:center;font-weight:700;margin:6px 0 0}.center{display:flex;justify-content:center;margin-top:8px}
+.example{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin:10px 0 4px;font-weight:700;text-align:center}
+.example div{background:var(--cover);color:var(--navy);border-left:7px solid var(--navy);border-radius:2px 6px 6px 2px;padding:12px 2px;font-size:.88rem;box-shadow:2px 2px 0 #d6caa9}
+.sw{display:inline-block;width:.9em;height:.9em;border-radius:2px;vertical-align:-.1em;margin:0 2px}
+.error{max-width:480px;margin:40px auto;padding:20px;border:2px solid var(--line);border-radius:12px;line-height:1.5}.error code{background:var(--page2);padding:1px 5px;border-radius:4px}
+@keyframes pop{from{transform:scale(.94);opacity:0}to{transform:scale(1);opacity:1}}
+@keyframes bounce{0%,100%{transform:translateY(-6px) rotate(-1.2deg)}35%{transform:translateY(-22px)}65%{transform:translateY(-3px)}}
+@keyframes shake{0%,100%{transform:translateY(-6px) rotate(-1.2deg)}20%{transform:translate(-7px,-6px) rotate(-3deg)}40%{transform:translate(7px,-6px) rotate(1deg)}60%{transform:translate(-5px,-6px)}80%{transform:translate(5px,-6px)}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div>
+      <h1>“Only connect!”</h1>
+      <p class="epigraph">“That was the whole of [the game]. Only connect [the four links]. Live in fragments no longer.”</p>
+      <p id="gameLabel">Loading…</p>
+    </div>
+    <div class="hbtns">
+      <button class="icon-btn" id="helpBtn" aria-label="How to play" title="How to play">?</button>
+      <button class="icon-btn" id="statsBtn" aria-label="Results and statistics" title="Results and statistics">&#9776;</button>
+    </div>
+  </header>
+
+  <main id="main" hidden>
+    <p id="prompt">Create four groups of four!</p>
+    <div id="stage">
+      <div id="solved" style="display:contents"></div>
+      <div id="board" role="group" aria-label="Puzzle tiles"></div>
+    </div>
+    <div id="msg" role="status" aria-live="polite"></div>
+    <div id="mistakes"><span>Mistakes remaining:</span><span id="dots" aria-hidden="true"></span><span class="sr" hidden id="mistakesText"></span></div>
+    <div id="controls">
+      <button class="btn" id="shuffleBtn">Shuffle</button>
+      <button class="btn" id="deselectBtn" disabled>Deselect All</button>
+      <button class="btn primary" id="submitBtn" disabled>Submit</button>
+      <button class="btn primary" id="resultsBtn" hidden>View Results</button>
+    </div>
+  </main>
+
+  <div id="loading" class="error" role="status">Loading today’s puzzle…</div>
+</div>
+
+<div id="toast" aria-hidden="true"></div>
+
+<dialog id="helpDlg" aria-labelledby="helpTitle">
+  <div class="dlg">
+    <button class="close" data-close aria-label="Close">&times;</button>
+    <h2 id="helpTitle">How to Play</h2>
+    <p>Find groups of four books that share something in common: titles, authors, characters, forms, and more.</p>
+    <ul>
+      <li>Pick four books, then tap <b>Submit</b>. A red bookmark marks each pick.</li>
+      <li>Get it right and the group is bound together with its category.</li>
+      <li>You can make <b>four mistakes</b> before the game ends.</li>
+      <li>If you’re <b>one away</b>, you’ll be told.</li>
+      <li>Some books could fit more than one group. Work out which fits where!</li>
+    </ul>
+    <div class="example"><div>Hamlet</div><div>Othello</div><div>King Lear</div><div>Macbeth</div></div>
+    <p style="text-align:center;margin:4px 0 0"><i>Shakespeare tragedies</i></p>
+    <p>Groups run from easiest <span class="sw" style="background:#ffba08"></span><b>amber</b> through <span class="sw" style="background:#3f88c5"></span><b>blue</b> and <span class="sw" style="background:#136f63"></span><b>teal</b> to trickiest <span class="sw" style="background:#032b43"></span><b>navy</b>. A new puzzle arrives every few days.</p>
+  </div>
+</dialog>
+
+<dialog id="resultsDlg" aria-labelledby="resultsTitle">
+  <div class="dlg">
+    <button class="close" data-close aria-label="Close">&times;</button>
+    <h2 id="resultsTitle">Statistics</h2>
+    <div id="finishedBlock" hidden>
+      <p id="finishedText" style="text-align:center;margin:0"></p>
+      <div id="sharePreview"></div>
+      <div class="center"><button class="btn primary" id="shareBtn">Share Results</button></div>
+    </div>
+    <h4>Statistics</h4>
+    <div class="stats" id="statsRow"></div>
+    <h4 id="nextHead">Next puzzle</h4>
+    <p id="countdown"></p>
+  </div>
+</dialog>
+
+<script>
+(() => {
+'use strict';
+
+/* ============================== SETTINGS ============================== */
+const CONFIG = {
+  csvUrl: 'games.csv',        // path to your spreadsheet (exported as CSV), next to this file
+  startDate: '2026-11-01',    // YYYY-MM-DD: the day Game 1 goes live (visitors' local time)
+  daysPerGame: 3,             // a new game appears every N days
+  maxMistakes: 4,
+  siteName: '“Only connect!”'
+};
+/* ====================================================================== */
+
+const $ = s => document.querySelector(s);
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const EMOJI = ['🟨','🟦','🟩','⬛'];
+const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const wait = ms => sleep(reduceMotion ? 0 : ms);
+
+/* ---------- safe storage ---------- */
+const store = {
+  get(k){ try { return JSON.parse(localStorage.getItem(k)); } catch(e){ return null; } },
+  set(k,v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch(e){} }
+};
+
+/* ---------- CSV ---------- */
+function parseCSV(text){
+  text = text.replace(/^\uFEFF/, '');
+  const rows = []; let row = [], f = '', q = false;
+  for (let i = 0; i < text.length; i++){
+    const c = text[i];
+    if (q){
+      if (c === '"'){ if (text[i+1] === '"'){ f += '"'; i++; } else q = false; }
+      else f += c;
+    } else if (c === '"') q = true;
+    else if (c === ','){ row.push(f); f = ''; }
+    else if (c === '\n' || c === '\r'){
+      if (c === '\r' && text[i+1] === '\n') i++;
+      row.push(f); f = ''; rows.push(row); row = [];
+    } else f += c;
+  }
+  if (f !== '' || row.length){ row.push(f); rows.push(row); }
+  return rows.filter(r => r.some(x => x.trim() !== ''));
+}
+
+function buildGames(rows){
+  const head = rows[0].map(h => h.trim().toLowerCase());
+  const col = (name, fallback) => { const i = head.indexOf(name); return i >= 0 ? i : fallback; };
+  const iGame = col('game',0), iCat = col('category',1), iE = col('entry1',2), iDiff = col('difficulty',-1), iFact = col('fact1',-1);
+  const map = new Map(), diffs = {}, facts = {};
+  rows.slice(1).forEach(r => {
+    const id = (r[iGame] || '').trim();
+    if (!id) return;
+    if (iDiff >= 0 && r[iDiff]) diffs[id] = r[iDiff].trim();
+    if (iFact >= 0 && !facts[id]) facts[id] = [0,1,2].map(k => (r[iFact + k] || '').trim()).filter(Boolean);
+    const entries = [0,1,2,3].map(k => (r[iE + k] || '').trim());
+    if (!map.has(id)) map.set(id, []);
+    map.get(id).push({ name: (r[iCat] || '').trim(), entries });
+  });
+  const games = [];
+  map.forEach((cats, id) => {
+    const ok = cats.length === 4 && cats.every(c => c.name && c.entries.every(Boolean));
+    if (!ok){ console.warn('Skipping game', id, '– needs exactly 4 categories with 4 entries each.'); return; }
+    games.push({ id, cats, difficulty: diffs[id] || '', facts: facts[id] || [] });
+  });
+  games.sort((a,b) => {
+    const x = parseFloat(a.id), y = parseFloat(b.id);
+    return (isNaN(x)||isNaN(y)) ? 0 : x - y;
+  });
+  return games;
+}
+
+/* ---------- date / schedule ---------- */
+function ymd(s){ const [y,m,d] = s.split('-').map(Number); return [y, m-1, d]; }
+function periodNumber(){
+  const [y,m,d] = ymd(CONFIG.startDate);
+  const now = new Date();
+  const today = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
+  const start = Date.UTC(y, m, d);
+  const days = Math.round((today - start) / 86400000);
+  return Math.max(0, Math.floor(days / CONFIG.daysPerGame));
+}
+function nextGameDate(n){
+  const [y,m,d] = ymd(CONFIG.startDate);
+  return new Date(y, m, d + (n + 1) * CONFIG.daysPerGame);
+}
+
+/* ---------- misc helpers ---------- */
+function hashStr(s){ let h = 2166136261; for (let i=0;i<s.length;i++){ h ^= s.charCodeAt(i); h = Math.imul(h,16777619); } return h >>> 0; }
+function rng(seed){ return () => { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+function shuffle(a, rand = Math.random){ a = a.slice(); for (let i=a.length-1;i>0;i--){ const j = Math.floor(rand()*(i+1)); [a[i],a[j]] = [a[j],a[i]]; } return a; }
+function sameMultiset(a, b){ const x = a.slice().sort(), y = b.slice().sort(); return x.length === y.length && x.every((v,i) => v === y[i]); }
+function overlap(labels, entries){ const pool = entries.slice(); let n = 0; labels.forEach(l => { const i = pool.indexOf(l); if (i >= 0){ pool.splice(i,1); n++; } }); return n; }
+
+/* ---------- app state ---------- */
+let game, labels, state, sel = [], busy = false, storageKey, isPreview = false, periodN = 0;
+
+function freshState(){
+  const nominal = [];
+  game.cats.forEach((c, ci) => c.entries.forEach((_, ei) => nominal[ci*4+ei] = ci));
+  const rand = rng(hashStr(game.id + labels.join('|')));
+  return {
+    hash: hashStr(labels.join('|') + game.cats.map(c => c.name).join('|')),
+    order: shuffle([...Array(16).keys()], rand),
+    nominal, solved: [], mistakes: 0, guesses: [], tried: [], status: 'playing'
+  };
+}
+const save = () => store.set(storageKey, state);
+
+/* ---------- rendering ---------- */
+const els = {
+  solved: $('#solved'), board: $('#board'), msg: $('#msg'), dots: $('#dots'),
+  submit: $('#submitBtn'), deselect: $('#deselectBtn'), shuffle: $('#shuffleBtn'),
+  results: $('#resultsBtn'), prompt: $('#prompt'), toast: $('#toast')
+};
+
+function solvedRow(ci){
+  const d = document.createElement('div');
+  d.className = 'solved c' + ci;
+  const h = document.createElement('h3'); h.textContent = game.cats[ci].name;
+  const p = document.createElement('p'); p.textContent = game.cats[ci].entries.join(', ');
+  d.append(h, p);
+  return d;
+}
+const SMALL = new Set(['a','an','the','and','but','or','nor','for','of','in','on','at','to','by','from','with','as']);
+function displayTitle(t){ return t.split(' ').map((w,i) => (/^[a-z]/.test(w) && (i === 0 || !SMALL.has(w))) ? w[0].toUpperCase() + w.slice(1) : w).join(' '); }
+function el(tag, cls, txt){ const e = document.createElement(tag); if (cls) e.className = cls; if (txt) e.textContent = txt; return e; }
+function tileBtn(id){
+  const b = el('button', 'tile');
+  b.type = 'button'; b.dataset.id = id; b.setAttribute('aria-label', labels[id]);
+  b.setAttribute('aria-pressed', sel.includes(id) ? 'true' : 'false');
+  const orn = el('span', 'orn'); orn.appendChild(el('i'));
+  const ttl = el('span', 'ttl'); ttl.appendChild(el('span', 'label', displayTitle(labels[id])));
+  const face = el('span', 'face'); face.append(orn, ttl);
+  const rb = el('span', 'ribbon'); rb.setAttribute('aria-hidden', 'true');
+  b.append(el('span', 'pages'), face, rb);
+  b.addEventListener('click', () => toggle(id));
+  return b;
+}
+function render(){
+  els.solved.replaceChildren(...state.solved.map(solvedRow));
+  els.board.replaceChildren(...state.order.map(tileBtn));
+  els.board.hidden = state.order.length === 0;
+  els.dots.replaceChildren(...[...Array(CONFIG.maxMistakes).keys()].map(i => {
+    const d = document.createElement('span');
+    d.className = 'dot' + (i >= CONFIG.maxMistakes - state.mistakes ? ' lost' : '');
+    return d;
+  }));
+  const done = state.status !== 'playing';
+  els.shuffle.hidden = els.deselect.hidden = els.submit.hidden = done;
+  els.results.hidden = !done;
+  $('#mistakes').hidden = done;
+  els.prompt.textContent = done ? (state.status === 'won' ? 'Well read!' : 'Better luck next time!') : 'Create four groups of four!';
+  updateButtons();
+  requestAnimationFrame(fitTiles);
+}
+function updateButtons(){
+  els.submit.disabled = sel.length !== 4 || busy;
+  els.deselect.disabled = sel.length === 0 || busy;
+  els.shuffle.disabled = busy;
+}
+function fitTiles(){
+  els.board.querySelectorAll('.label').forEach(s => {
+    const box = s.parentElement, cs = getComputedStyle(box);
+    const availH = box.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
+    if (availH <= 0) return;
+    s.style.fontSize = ''; s.style.overflowWrap = 'normal'; s.style.hyphens = 'manual';
+    let size = parseFloat(getComputedStyle(s).fontSize);
+    const tooWide = () => s.scrollWidth > s.clientWidth + 0.5, tooTall = () => s.offsetHeight > availH;
+    while (tooWide() && size > 9){ size -= 0.5; s.style.fontSize = size + 'px'; }
+    if (tooWide()){ s.style.overflowWrap = 'anywhere'; s.style.hyphens = 'auto'; }
+    while (tooTall() && size > 9){ size -= 0.5; s.style.fontSize = size + 'px'; }
+  });
+}
+let toastTimer;
+function toast(text, ms = 1900){
+  els.toast.textContent = text; els.toast.classList.add('show');
+  els.msg.textContent = text;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { els.toast.classList.remove('show'); els.msg.textContent = ''; }, ms);
+}
+
+/* ---------- interaction ---------- */
+function toggle(id){
+  if (busy || state.status !== 'playing') return;
+  const i = sel.indexOf(id);
+  if (i >= 0) sel.splice(i,1);
+  else if (sel.length < 4) sel.push(id);
+  else return;
+  els.board.querySelectorAll('.tile').forEach(b => b.setAttribute('aria-pressed', sel.includes(+b.dataset.id) ? 'true' : 'false'));
+  updateButtons();
+}
+function tileEls(ids){ return ids.map(id => els.board.querySelector('[data-id="'+id+'"]')).filter(Boolean); }
+
+function applySolve(c, ids){
+  // If duplicate labels were involved, swap hidden group assignments so the solution stays consistent.
+  ids.forEach(id => {
+    if (state.nominal[id] === c) return;
+    const other = state.order.find(o => !ids.includes(o) && labels[o] === labels[id] && state.nominal[o] === c);
+    if (other !== undefined){ [state.nominal[id], state.nominal[other]] = [state.nominal[other], state.nominal[id]]; }
+    else state.nominal[id] = c;
+  });
+  state.solved.push(c);
+  state.order = state.order.filter(o => !ids.includes(o));
+}
+
+async function submit(){
+  if (busy || sel.length !== 4 || state.status !== 'playing') return;
+  const chosen = sel.slice();
+  const picked = chosen.map(id => labels[id]);
+  const key = picked.slice().sort().join('|');
+  if (state.tried.includes(key)){ toast('Already guessed!'); return; }
+  busy = true; updateButtons();
+  state.tried.push(key);
+  state.guesses.push(chosen.map(id => state.nominal[id]));
+
+  const match = game.cats.findIndex((c, ci) => !state.solved.includes(ci) && sameMultiset(picked, c.entries));
+  if (match >= 0){
+    tileEls(chosen).forEach(b => b.classList.add('bounce'));
+    await wait(480);
+    applySolve(match, chosen); sel = []; render();
+    if (state.solved.length === 4) await finish('won');
+  } else {
+    const oneAway = game.cats.some((c, ci) => !state.solved.includes(ci) && overlap(picked, c.entries) === 3);
+    state.mistakes++;
+    tileEls(chosen).forEach(b => b.classList.add('shake'));
+    toast(oneAway ? 'One away…' : 'Not quite!');
+    await wait(500);
+    tileEls(chosen).forEach(b => b.classList.remove('shake'));
+    if (state.mistakes >= CONFIG.maxMistakes){
+      sel = []; render();
+      toast('Out of mistakes. Here are the answers…', 2400);
+      for (const c of [0,1,2,3]){
+        if (state.solved.includes(c)) continue;
+        await wait(700);
+        applySolve(c, state.order.filter(id => state.nominal[id] === c)); render();
+      }
+      await finish('lost');
+    } else { render(); }
+  }
+  busy = false; save(); updateButtons();
+}
+
+function pickFact(){ if (state.factIdx === undefined && game.facts.length) state.factIdx = Math.floor(Math.random() * game.facts.length); }
+async function finish(status){
+  state.status = status; pickFact(); save();
+  if (!isPreview) updateStats(status === 'won');
+  render();
+  await wait(status === 'won' ? 1900 : 900);
+  openResults();
+}
+
+function updateStats(won){
+  const s = store.get('ll:stats') || { played:0, won:0, streak:0, maxStreak:0, lastWonN:-99 };
+  s.played++;
+  if (won){
+    s.won++;
+    s.streak = (s.lastWonN === periodN - 1) ? s.streak + 1 : 1;
+    s.lastWonN = periodN;
+    s.maxStreak = Math.max(s.maxStreak, s.streak);
+  } else s.streak = 0;
+  store.set('ll:stats', s);
+}
+
+/* ---------- share ---------- */
+function gameTitle(){ return `${CONFIG.siteName} — Game #${isPreview ? game.id : periodN + 1}`; }
+function shareUrl(){ return location.origin && location.origin !== 'null' ? location.origin + location.pathname : location.href.split('?')[0]; }
+function gridText(){ return state.guesses.map(g => g.map(c => EMOJI[c]).join('')).join('\n'); }
+function shareFact(){ return (game.facts && game.facts[state.factIdx]) || ''; }
+function shareText(){ return gameTitle() + (shareFact() ? '\n\n' + shareFact() : ''); }
+async function share(){
+  const text = shareText();
+  if (navigator.share && matchMedia('(pointer: coarse)').matches){
+    try { await navigator.share({ text }); return; }
+    catch(e){ if (e && e.name === 'AbortError') return; }
+  }
+  try { await navigator.clipboard.writeText(text); toastIn('Copied to clipboard!'); return; } catch(e){}
+  const ta = document.createElement('textarea');
+  ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+  document.body.appendChild(ta); ta.select();
+  let ok = false; try { ok = document.execCommand('copy'); } catch(e){}
+  ta.remove();
+  toastIn(ok ? 'Copied to clipboard!' : 'Select the text above to copy it');
+}
+function toastIn(text){
+  const b = $('#shareBtn'); const old = b.textContent;
+  b.textContent = text; setTimeout(() => b.textContent = old, 1800);
+}
+
+/* ---------- dialogs ---------- */
+let cdTimer;
+function openResults(){
+  const dlg = $('#resultsDlg');
+  const done = state.status !== 'playing';
+  $('#finishedBlock').hidden = !done;
+  $('#resultsTitle').textContent = done ? (state.status === 'won' ? (state.mistakes === 0 ? 'Perfect!' : 'Solved!') : 'Game Over') : 'Statistics';
+  if (done){
+    $('#finishedText').textContent = state.status === 'won'
+      ? `You found all four groups with ${state.mistakes} mistake${state.mistakes===1?'':'s'}.`
+      : 'You ran out of mistakes. The answers are on the board.';
+    const prev = $('#sharePreview');
+    prev.replaceChildren();
+    pickFact();
+    const t = document.createElement('span'); t.className = 't'; t.textContent = gameTitle();
+    const f = document.createElement('span'); f.className = 'f'; f.textContent = shareFact();
+    prev.append(t, f);
+  }
+  const s = store.get('ll:stats') || { played:0, won:0, streak:0, maxStreak:0 };
+  const items = [[s.played,'Played'],[s.played ? Math.round(100*s.won/s.played) : 0,'Win %'],[s.streak,'Current streak'],[s.maxStreak,'Max streak']];
+  $('#statsRow').replaceChildren(...items.map(([v,l]) => {
+    const d = document.createElement('div');
+    const b = document.createElement('b'); b.textContent = v;
+    const sm = document.createElement('small'); sm.textContent = l;
+    d.append(b, sm); return d;
+  }));
+  $('#nextHead').hidden = $('#countdown').hidden = isPreview;
+  const tick = () => {
+    const ms = nextGameDate(periodN) - new Date();
+    if (ms <= 0){ $('#countdown').textContent = 'A new puzzle is ready — refresh the page!'; return; }
+    const d = Math.floor(ms/864e5), h = Math.floor(ms%864e5/36e5), m = Math.floor(ms%36e5/6e4);
+    $('#countdown').textContent = `Next game in ${d ? d+'d ' : ''}${h}h ${m}m`;
+  };
+  tick(); clearInterval(cdTimer); cdTimer = setInterval(tick, 30000);
+  if (!dlg.open) dlg.showModal();
+}
+
+document.querySelectorAll('dialog').forEach(dlg => {
+  dlg.addEventListener('click', e => { if (e.target === dlg || e.target.closest('[data-close]')) dlg.close(); });
+});
+$('#helpBtn').addEventListener('click', () => $('#helpDlg').showModal());
+$('#statsBtn').addEventListener('click', () => state && openResults());
+$('#shareBtn').addEventListener('click', share);
+els.results.addEventListener('click', openResults);
+els.submit.addEventListener('click', submit);
+els.deselect.addEventListener('click', () => { sel = []; els.board.querySelectorAll('.tile').forEach(b => b.setAttribute('aria-pressed','false')); updateButtons(); });
+els.shuffle.addEventListener('click', () => { state.order = shuffle(state.order); save(); render(); });
+let rt; addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(fitTiles, 120); });
+if (document.fonts){ document.fonts.ready.then(fitTiles); document.fonts.addEventListener && document.fonts.addEventListener('loadingdone', fitTiles); }
+
+/* ---------- boot ---------- */
+function showError(html){
+  const el = $('#loading'); el.hidden = false; el.innerHTML = html;
+  $('#gameLabel').textContent = '';
+}
+async function boot(){
+  const text = "Game,Category,Entry1,Entry2,Entry3,Entry4,Difficulty,Fact1,Fact2,Fact3\n1,19th-century women novelists,Jane Austen,Charlotte Bront\u00eb,Emily Bront\u00eb,George Eliot,Easy,\"Jane Austen\u2019s first novel, Sense and Sensibility (1811), was published anonymously, credited only to \u201cA Lady.\u201d\",\"Salman Rushdie\u2019s Midnight\u2019s Children won the Booker Prize in 1981, then the \u201cBooker of Bookers\u201d in 1993 and the \u201cBest of the Booker\u201d in 2008.\",\"\u201cAll the world\u2019s a stage, and all the men and women merely players.\u201d \u2014 Jaques, As You Like It\"\n1,The Great Gatsby characters,Jay Gatsby,Daisy Buchanan,Nick Carraway,Tom Buchanan,Easy,\"Jane Austen\u2019s first novel, Sense and Sensibility (1811), was published anonymously, credited only to \u201cA Lady.\u201d\",\"Salman Rushdie\u2019s Midnight\u2019s Children won the Booker Prize in 1981, then the \u201cBooker of Bookers\u201d in 1993 and the \u201cBest of the Booker\u201d in 2008.\",\"\u201cAll the world\u2019s a stage, and all the men and women merely players.\u201d \u2014 Jaques, As You Like It\"\n1,Booker Prize winners,Midnight\u2019s Children,The Remains of the Day,Life of Pi,Lincoln in the Bardo,Easy,\"Jane Austen\u2019s first novel, Sense and Sensibility (1811), was published anonymously, credited only to \u201cA Lady.\u201d\",\"Salman Rushdie\u2019s Midnight\u2019s Children won the Booker Prize in 1981, then the \u201cBooker of Bookers\u201d in 1993 and the \u201cBest of the Booker\u201d in 2008.\",\"\u201cAll the world\u2019s a stage, and all the men and women merely players.\u201d \u2014 Jaques, As You Like It\"\n1,Shakespeare comedies,A Midsummer Night\u2019s Dream,Twelfth Night,Much Ado About Nothing,As You Like It,Easy,\"Jane Austen\u2019s first novel, Sense and Sensibility (1811), was published anonymously, credited only to \u201cA Lady.\u201d\",\"Salman Rushdie\u2019s Midnight\u2019s Children won the Booker Prize in 1981, then the \u201cBooker of Bookers\u201d in 1993 and the \u201cBest of the Booker\u201d in 2008.\",\"\u201cAll the world\u2019s a stage, and all the men and women merely players.\u201d \u2014 Jaques, As You Like It\"\n2,Modernist novelists,James Joyce,Virginia Woolf,William Faulkner,Marcel Proust,Moderate,\"Ezra Pound heavily edited T. S. Eliot\u2019s The Waste Land (1922), and Eliot dedicated it to him as \u201cil miglior fabbro,\u201d the better craftsman.\",\"Allen Ginsberg\u2019s \u201cHowl\u201d prompted a 1957 obscenity trial in San Francisco; its publisher, Lawrence Ferlinghetti, was acquitted.\",\"Langston Hughes\u2019s first poetry collection, The Weary Blues (1926), helped define the Harlem Renaissance.\"\n2,Modernist poets,T.S. Eliot,Ezra Pound,Wallace Stevens,William Carlos Williams,Moderate,\"Ezra Pound heavily edited T. S. Eliot\u2019s The Waste Land (1922), and Eliot dedicated it to him as \u201cil miglior fabbro,\u201d the better craftsman.\",\"Allen Ginsberg\u2019s \u201cHowl\u201d prompted a 1957 obscenity trial in San Francisco; its publisher, Lawrence Ferlinghetti, was acquitted.\",\"Langston Hughes\u2019s first poetry collection, The Weary Blues (1926), helped define the Harlem Renaissance.\"\n2,Beat Generation writers,Jack Kerouac,Allen Ginsberg,William S. Burroughs,Lawrence Ferlinghetti,Moderate,\"Ezra Pound heavily edited T. S. Eliot\u2019s The Waste Land (1922), and Eliot dedicated it to him as \u201cil miglior fabbro,\u201d the better craftsman.\",\"Allen Ginsberg\u2019s \u201cHowl\u201d prompted a 1957 obscenity trial in San Francisco; its publisher, Lawrence Ferlinghetti, was acquitted.\",\"Langston Hughes\u2019s first poetry collection, The Weary Blues (1926), helped define the Harlem Renaissance.\"\n2,Harlem Renaissance writers,Langston Hughes,Zora Neale Hurston,Countee Cullen,Claude McKay,Moderate,\"Ezra Pound heavily edited T. S. Eliot\u2019s The Waste Land (1922), and Eliot dedicated it to him as \u201cil miglior fabbro,\u201d the better craftsman.\",\"Allen Ginsberg\u2019s \u201cHowl\u201d prompted a 1957 obscenity trial in San Francisco; its publisher, Lawrence Ferlinghetti, was acquitted.\",\"Langston Hughes\u2019s first poetry collection, The Weary Blues (1926), helped define the Harlem Renaissance.\"\n3,Books set in London,Mrs Dalloway,Great Expectations,The Picture of Dorian Gray,Neverwhere,Difficult,\"Wuthering Heights (1847) was published under the pseudonym Ellis Bell; its author, Emily Bront\u00eb, died the following year.\",\"Neil Gaiman\u2019s Neverwhere began as a 1996 BBC television serial, with the novel written alongside it.\",Joseph Conrad\u2019s Heart of Darkness was first serialized in Blackwood\u2019s Magazine in 1899.\n3,Novels with a body part in the title,Heart of Darkness,The Handmaid\u2019s Tale,The Bone People,Their Eyes Were Watching God,Difficult,\"Wuthering Heights (1847) was published under the pseudonym Ellis Bell; its author, Emily Bront\u00eb, died the following year.\",\"Neil Gaiman\u2019s Neverwhere began as a 1996 BBC television serial, with the novel written alongside it.\",Joseph Conrad\u2019s Heart of Darkness was first serialized in Blackwood\u2019s Magazine in 1899.\n3,Novels with a compass direction in the title,Northanger Abbey,South Riding,East of Eden,Westward Ho!,Difficult,\"Wuthering Heights (1847) was published under the pseudonym Ellis Bell; its author, Emily Bront\u00eb, died the following year.\",\"Neil Gaiman\u2019s Neverwhere began as a 1996 BBC television serial, with the novel written alongside it.\",Joseph Conrad\u2019s Heart of Darkness was first serialized in Blackwood\u2019s Magazine in 1899.\n3,Novels titled after places/estates,Middlemarch,Wuthering Heights,Mansfield Park,Cranford,Difficult,\"Wuthering Heights (1847) was published under the pseudonym Ellis Bell; its author, Emily Bront\u00eb, died the following year.\",\"Neil Gaiman\u2019s Neverwhere began as a 1996 BBC television serial, with the novel written alongside it.\",Joseph Conrad\u2019s Heart of Darkness was first serialized in Blackwood\u2019s Magazine in 1899.\n4,Science-fiction grandmasters,Isaac Asimov,Arthur C. Clarke,Ursula K. Le Guin,Octavia Butler,Easy,\"Ursula K. Le Guin\u2019s A Wizard of Earthsea (1968) set its wizard school on the island of Roke, decades before Hogwarts.\",Narnia\u2019s C. S. Lewis and Middle-earth\u2019s J. R. R. Tolkien were friends and members of the Oxford writing group the Inklings.,Joseph Heller reportedly changed Catch-18 to Catch-22 to avoid confusion with Leon Uris\u2019s novel Mila 18.\n4,Fictional wizards/mages,Gandalf,Merlin,Albus Dumbledore,Rincewind,Easy,\"Ursula K. Le Guin\u2019s A Wizard of Earthsea (1968) set its wizard school on the island of Roke, decades before Hogwarts.\",Narnia\u2019s C. S. Lewis and Middle-earth\u2019s J. R. R. Tolkien were friends and members of the Oxford writing group the Inklings.,Joseph Heller reportedly changed Catch-18 to Catch-22 to avoid confusion with Leon Uris\u2019s novel Mila 18.\n4,Fictional realms,Narnia,Middle-earth,Wonderland,Oz,Easy,\"Ursula K. Le Guin\u2019s A Wizard of Earthsea (1968) set its wizard school on the island of Roke, decades before Hogwarts.\",Narnia\u2019s C. S. Lewis and Middle-earth\u2019s J. R. R. Tolkien were friends and members of the Oxford writing group the Inklings.,Joseph Heller reportedly changed Catch-18 to Catch-22 to avoid confusion with Leon Uris\u2019s novel Mila 18.\n4,Books with a number in the title,Slaughterhouse-Five,Catch-22,The Three-Body Problem,Fahrenheit 451,Easy,\"Ursula K. Le Guin\u2019s A Wizard of Earthsea (1968) set its wizard school on the island of Roke, decades before Hogwarts.\",Narnia\u2019s C. S. Lewis and Middle-earth\u2019s J. R. R. Tolkien were friends and members of the Oxford writing group the Inklings.,Joseph Heller reportedly changed Catch-18 to Catch-22 to avoid confusion with Leon Uris\u2019s novel Mila 18.\n5,Latin American Boom authors,Gabriel Garc\u00eda M\u00e1rquez,Julio Cort\u00e1zar,Mario Vargas Llosa,Carlos Fuentes,Moderate,\"Bram Stoker\u2019s Dracula (1897) is told through diary entries, letters, telegrams, and newspaper clippings.\",\"Jonathan Swift\u2019s Gulliver\u2019s Travels (1726) was first published anonymously, with the fictional Lemuel Gulliver named as the author.\",\"\u201cThough this be madness, yet there is method in\u2019t.\u201d \u2014 Polonius, Hamlet\"\n5,Hamlet characters,Hamlet,Ophelia,Claudius,Gertrude,Moderate,\"Bram Stoker\u2019s Dracula (1897) is told through diary entries, letters, telegrams, and newspaper clippings.\",\"Jonathan Swift\u2019s Gulliver\u2019s Travels (1726) was first published anonymously, with the fictional Lemuel Gulliver named as the author.\",\"\u201cThough this be madness, yet there is method in\u2019t.\u201d \u2014 Polonius, Hamlet\"\n5,Epistolary novels,Dracula,The Color Purple,Pamela,Les Liaisons Dangereuses,Moderate,\"Bram Stoker\u2019s Dracula (1897) is told through diary entries, letters, telegrams, and newspaper clippings.\",\"Jonathan Swift\u2019s Gulliver\u2019s Travels (1726) was first published anonymously, with the fictional Lemuel Gulliver named as the author.\",\"\u201cThough this be madness, yet there is method in\u2019t.\u201d \u2014 Polonius, Hamlet\"\n5,Author surnames that are common English words,Swift,Hardy,Wilde,Sharp,Moderate,\"Bram Stoker\u2019s Dracula (1897) is told through diary entries, letters, telegrams, and newspaper clippings.\",\"Jonathan Swift\u2019s Gulliver\u2019s Travels (1726) was first published anonymously, with the fictional Lemuel Gulliver named as the author.\",\"\u201cThough this be madness, yet there is method in\u2019t.\u201d \u2014 Polonius, Hamlet\"\n6,Dystopian novels,1984,Brave New World,Fahrenheit 451,We,Easy,Yevgeny Zamyatin\u2019s We was banned in the Soviet Union and first appeared in English in 1924.,The title Fahrenheit 451 refers to the temperature at which book paper is said to catch fire.,\"Hercule Poirot made his debut in Agatha Christie\u2019s first novel, The Mysterious Affair at Styles (1920).\"\n6,Fictional detectives,Sherlock Holmes,Hercule Poirot,Miss Marple,Philip Marlowe,Easy,Yevgeny Zamyatin\u2019s We was banned in the Soviet Union and first appeared in English in 1924.,The title Fahrenheit 451 refers to the temperature at which book paper is said to catch fire.,\"Hercule Poirot made his debut in Agatha Christie\u2019s first novel, The Mysterious Affair at Styles (1920).\"\n6,Russian novels,Crime and Punishment,War and Peace,Anna Karenina,The Brothers Karamazov,Easy,Yevgeny Zamyatin\u2019s We was banned in the Soviet Union and first appeared in English in 1924.,The title Fahrenheit 451 refers to the temperature at which book paper is said to catch fire.,\"Hercule Poirot made his debut in Agatha Christie\u2019s first novel, The Mysterious Affair at Styles (1920).\"\n6,Authors known by initials,J.R.R. Tolkien,H.G. Wells,F. Scott Fitzgerald,E.M. Forster,Easy,Yevgeny Zamyatin\u2019s We was banned in the Soviet Union and first appeared in English in 1924.,The title Fahrenheit 451 refers to the temperature at which book paper is said to catch fire.,\"Hercule Poirot made his debut in Agatha Christie\u2019s first novel, The Mysterious Affair at Styles (1920).\"\n7,Hogwarts houses,Gryffindor,Slytherin,Hufflepuff,Ravenclaw,Moderate,J. K. Rowling\u2019s first Harry Potter manuscript was reportedly turned down by about a dozen publishers before Bloomsbury accepted it.,Dickens\u2019s Hard Times (1854) first appeared in weekly installments in his magazine Household Words.,Tom Stoppard\u2019s Rosencrantz and Guildenstern Are Dead had its first performance at the Edinburgh Fringe in 1966.\n7,Dickens novels,Bleak House,Hard Times,Little Dorrit,Dombey and Son,Moderate,J. K. Rowling\u2019s first Harry Potter manuscript was reportedly turned down by about a dozen publishers before Bloomsbury accepted it.,Dickens\u2019s Hard Times (1854) first appeared in weekly installments in his magazine Household Words.,Tom Stoppard\u2019s Rosencrantz and Guildenstern Are Dead had its first performance at the Edinburgh Fringe in 1966.\n7,Tom Stoppard plays,Arcadia,Rosencrantz and Guildenstern Are Dead,The Real Thing,Jumpers,Moderate,J. K. Rowling\u2019s first Harry Potter manuscript was reportedly turned down by about a dozen publishers before Bloomsbury accepted it.,Dickens\u2019s Hard Times (1854) first appeared in weekly installments in his magazine Household Words.,Tom Stoppard\u2019s Rosencrantz and Guildenstern Are Dead had its first performance at the Edinburgh Fringe in 1966.\n7,Fictional Toms (surnames),Sawyer,Ripley,Buchanan,Joad,Moderate,J. K. Rowling\u2019s first Harry Potter manuscript was reportedly turned down by about a dozen publishers before Bloomsbury accepted it.,Dickens\u2019s Hard Times (1854) first appeared in weekly installments in his magazine Household Words.,Tom Stoppard\u2019s Rosencrantz and Guildenstern Are Dead had its first performance at the Edinburgh Fringe in 1966.\n8,Modernist novels,Ulysses,Mrs Dalloway,To the Lighthouse,The Sound and the Fury,Easy,\"Ulysses was serialized in The Little Review, which was prosecuted for obscenity in 1921; the book was published in Paris in 1922.\",Samuel Clemens took the name Mark Twain from a riverboat call meaning two fathoms of water.,\"\u201cO, beware, my lord, of jealousy; it is the green-eyed monster.\u201d \u2014 Iago, Othello\"\n8,Authors who used pen names,George Eliot,George Orwell,Lewis Carroll,Mark Twain,Easy,\"Ulysses was serialized in The Little Review, which was prosecuted for obscenity in 1921; the book was published in Paris in 1922.\",Samuel Clemens took the name Mark Twain from a riverboat call meaning two fathoms of water.,\"\u201cO, beware, my lord, of jealousy; it is the green-eyed monster.\u201d \u2014 Iago, Othello\"\n8,\"Shakespeare tragedies, short titles\",Hamlet,Othello,King Lear,Macbeth,Easy,\"Ulysses was serialized in The Little Review, which was prosecuted for obscenity in 1921; the book was published in Paris in 1922.\",Samuel Clemens took the name Mark Twain from a riverboat call meaning two fathoms of water.,\"\u201cO, beware, my lord, of jealousy; it is the green-eyed monster.\u201d \u2014 Iago, Othello\"\n8,Titles with a color word,The Red and the Black,The Color Purple,The White Tiger,The Blue Flower,Easy,\"Ulysses was serialized in The Little Review, which was prosecuted for obscenity in 1921; the book was published in Paris in 1922.\",Samuel Clemens took the name Mark Twain from a riverboat call meaning two fathoms of water.,\"\u201cO, beware, my lord, of jealousy; it is the green-eyed monster.\u201d \u2014 Iago, Othello\"\n9,Booker Prize winners,Midnight\u2019s Children,The Remains of the Day,Life of Pi,Lincoln in the Bardo,Moderate,Kazuo Ishiguro\u2019s The Remains of the Day won the Booker Prize in 1989; he won the Nobel Prize in Literature in 2017.,Alice Walker\u2019s The Color Purple won the Pulitzer Prize for Fiction in 1983.,\"\u201cIf music be the food of love, play on.\u201d \u2014 Orsino, Twelfth Night\"\n9,Novels with a color word,The Red and the Black,The Color Purple,The White Tiger,The Blue Flower,Moderate,Kazuo Ishiguro\u2019s The Remains of the Day won the Booker Prize in 1989; he won the Nobel Prize in Literature in 2017.,Alice Walker\u2019s The Color Purple won the Pulitzer Prize for Fiction in 1983.,\"\u201cIf music be the food of love, play on.\u201d \u2014 Orsino, Twelfth Night\"\n9,Authors whose surnames are also first names,Joyce,Eliot,Hardy,Wilde,Moderate,Kazuo Ishiguro\u2019s The Remains of the Day won the Booker Prize in 1989; he won the Nobel Prize in Literature in 2017.,Alice Walker\u2019s The Color Purple won the Pulitzer Prize for Fiction in 1983.,\"\u201cIf music be the food of love, play on.\u201d \u2014 Orsino, Twelfth Night\"\n9,Shakespeare comedies,A Midsummer Night\u2019s Dream,Twelfth Night,Much Ado About Nothing,As You Like It,Moderate,Kazuo Ishiguro\u2019s The Remains of the Day won the Booker Prize in 1989; he won the Nobel Prize in Literature in 2017.,Alice Walker\u2019s The Color Purple won the Pulitzer Prize for Fiction in 1983.,\"\u201cIf music be the food of love, play on.\u201d \u2014 Orsino, Twelfth Night\"\n10,Jane Austen heroines,Elizabeth Bennet,Emma Woodhouse,Elinor Dashwood,Anne Elliot,Difficult,Hilary Mantel won the Booker Prize twice: for Wolf Hall (2009) and Bring Up the Bodies (2012).,\"Ulysses unfolds on a single day, June 16, 1904, which fans celebrate every year as Bloomsday.\",Ralph Ellison\u2019s Invisible Man (1952) won the National Book Award for Fiction in 1953.\n10,Novels set in a single day,Ulysses,Mrs Dalloway,Saturday,Seize the Day,Difficult,Hilary Mantel won the Booker Prize twice: for Wolf Hall (2009) and Bring Up the Bodies (2012).,\"Ulysses unfolds on a single day, June 16, 1904, which fans celebrate every year as Bloomsday.\",Ralph Ellison\u2019s Invisible Man (1952) won the National Book Award for Fiction in 1953.\n10,Novels with unnamed narrators,Rebecca,Invisible Man,Notes from Underground,Fight Club,Difficult,Hilary Mantel won the Booker Prize twice: for Wolf Hall (2009) and Bring Up the Bodies (2012).,\"Ulysses unfolds on a single day, June 16, 1904, which fans celebrate every year as Bloomsday.\",Ralph Ellison\u2019s Invisible Man (1952) won the National Book Award for Fiction in 1953.\n10,Two-time Booker Prize winners (surnames),Mantel,Coetzee,Carey,Atwood,Difficult,Hilary Mantel won the Booker Prize twice: for Wolf Hall (2009) and Bring Up the Bodies (2012).,\"Ulysses unfolds on a single day, June 16, 1904, which fans celebrate every year as Bloomsday.\",Ralph Ellison\u2019s Invisible Man (1952) won the National Book Award for Fiction in 1953.\n11,Beat Generation writers,Jack Kerouac,Allen Ginsberg,William S. Burroughs,Lawrence Ferlinghetti,Easy,Jack Kerouac wrote the first draft of On the Road in 1951 on a long continuous roll of paper.,\"\u201cDouble, double toil and trouble; fire burn, and cauldron bubble.\u201d \u2014 the Witches, Macbeth\",\"Kurt Vonnegut survived the 1945 firebombing of Dresden as a prisoner of war, an experience behind Slaughterhouse-Five.\"\n11,Macbeth characters,Macbeth,Lady Macbeth,Banquo,Macduff,Easy,Jack Kerouac wrote the first draft of On the Road in 1951 on a long continuous roll of paper.,\"\u201cDouble, double toil and trouble; fire burn, and cauldron bubble.\u201d \u2014 the Witches, Macbeth\",\"Kurt Vonnegut survived the 1945 firebombing of Dresden as a prisoner of war, an experience behind Slaughterhouse-Five.\"\n11,Fictional wizards/mages,Gandalf,Merlin,Albus Dumbledore,Rincewind,Easy,Jack Kerouac wrote the first draft of On the Road in 1951 on a long continuous roll of paper.,\"\u201cDouble, double toil and trouble; fire burn, and cauldron bubble.\u201d \u2014 the Witches, Macbeth\",\"Kurt Vonnegut survived the 1945 firebombing of Dresden as a prisoner of war, an experience behind Slaughterhouse-Five.\"\n11,Books with a number in the title,Slaughterhouse-Five,Catch-22,The Three-Body Problem,Fahrenheit 451,Easy,Jack Kerouac wrote the first draft of On the Road in 1951 on a long continuous roll of paper.,\"\u201cDouble, double toil and trouble; fire burn, and cauldron bubble.\u201d \u2014 the Witches, Macbeth\",\"Kurt Vonnegut survived the 1945 firebombing of Dresden as a prisoner of war, an experience behind Slaughterhouse-Five.\"\n12,19th-century women novelists,Jane Austen,Charlotte Bront\u00eb,Emily Bront\u00eb,George Eliot,Moderate,\"Toni Morrison won the Nobel Prize in Literature in 1993, the first Black woman to receive it.\",Mary Ann Evans chose the pen name George Eliot partly so her novels would be taken seriously.,\"The Great Gatsby entered the US public domain on January 1, 2021.\"\n12,The Great Gatsby characters,Jay Gatsby,Daisy Buchanan,Nick Carraway,Tom Buchanan,Moderate,\"Toni Morrison won the Nobel Prize in Literature in 1993, the first Black woman to receive it.\",Mary Ann Evans chose the pen name George Eliot partly so her novels would be taken seriously.,\"The Great Gatsby entered the US public domain on January 1, 2021.\"\n12,Nobel laureates in Literature,Toni Morrison,Kazuo Ishiguro,Doris Lessing,W.B. Yeats,Moderate,\"Toni Morrison won the Nobel Prize in Literature in 1993, the first Black woman to receive it.\",Mary Ann Evans chose the pen name George Eliot partly so her novels would be taken seriously.,\"The Great Gatsby entered the US public domain on January 1, 2021.\"\n12,Novels with a body part in the title,Heart of Darkness,The Handmaid\u2019s Tale,The Bone People,Their Eyes Were Watching God,Moderate,\"Toni Morrison won the Nobel Prize in Literature in 1993, the first Black woman to receive it.\",Mary Ann Evans chose the pen name George Eliot partly so her novels would be taken seriously.,\"The Great Gatsby entered the US public domain on January 1, 2021.\"\n13,Fictional dogs,Toto,Buck,Nana,Argos,Difficult,Aldous Huxley took the title Brave New World from Miranda\u2019s speech in Shakespeare\u2019s The Tempest.,\"Anton Chekhov, who practiced medicine, said medicine was his lawful wife and literature his mistress.\",\"Jack London\u2019s The Call of the Wild (1903), starring the dog Buck, is set during the Klondike Gold Rush.\"\n13,Titles taken from Shakespeare,Brave New World,Infinite Jest,Pale Fire,Something Wicked This Way Comes,Difficult,Aldous Huxley took the title Brave New World from Miranda\u2019s speech in Shakespeare\u2019s The Tempest.,\"Anton Chekhov, who practiced medicine, said medicine was his lawful wife and literature his mistress.\",\"Jack London\u2019s The Call of the Wild (1903), starring the dog Buck, is set during the Klondike Gold Rush.\"\n13,Writers with medical training,Anton Chekhov,Arthur Conan Doyle,William Carlos Williams,John Keats,Difficult,Aldous Huxley took the title Brave New World from Miranda\u2019s speech in Shakespeare\u2019s The Tempest.,\"Anton Chekhov, who practiced medicine, said medicine was his lawful wife and literature his mistress.\",\"Jack London\u2019s The Call of the Wild (1903), starring the dog Buck, is set during the Klondike Gold Rush.\"\n13,Last lines of famous novels,\"So we beat on, boats against the current\",\"After all, tomorrow is another day\",He loved Big Brother,Yes I said yes I will Yes,Difficult,Aldous Huxley took the title Brave New World from Miranda\u2019s speech in Shakespeare\u2019s The Tempest.,\"Anton Chekhov, who practiced medicine, said medicine was his lawful wife and literature his mistress.\",\"Jack London\u2019s The Call of the Wild (1903), starring the dog Buck, is set during the Klondike Gold Rush.\"\n14,Harlem Renaissance writers,Langston Hughes,Zora Neale Hurston,Countee Cullen,Claude McKay,Easy,Zora Neale Hurston studied anthropology at Barnard College under Franz Boas.,\"Pride and Prejudice began as a manuscript called First Impressions, written in the 1790s.\",Harper Lee\u2019s To Kill a Mockingbird won the Pulitzer Prize for Fiction in 1961.\n14,Pride and Prejudice characters,Elizabeth Bennet,Mr. Darcy,Jane Bennet,Mr. Bingley,Easy,Zora Neale Hurston studied anthropology at Barnard College under Franz Boas.,\"Pride and Prejudice began as a manuscript called First Impressions, written in the 1790s.\",Harper Lee\u2019s To Kill a Mockingbird won the Pulitzer Prize for Fiction in 1961.\n14,Pulitzer Prize for Fiction winners,The Grapes of Wrath,To Kill a Mockingbird,Middlesex,The Road,Easy,Zora Neale Hurston studied anthropology at Barnard College under Franz Boas.,\"Pride and Prejudice began as a manuscript called First Impressions, written in the 1790s.\",Harper Lee\u2019s To Kill a Mockingbird won the Pulitzer Prize for Fiction in 1961.\n14,Novels with a color word in the title,The Red and the Black,The Color Purple,The White Tiger,The Blue Flower,Easy,Zora Neale Hurston studied anthropology at Barnard College under Franz Boas.,\"Pride and Prejudice began as a manuscript called First Impressions, written in the 1790s.\",Harper Lee\u2019s To Kill a Mockingbird won the Pulitzer Prize for Fiction in 1961.\n15,Modernist poets,T.S. Eliot,Ezra Pound,Wallace Stevens,William Carlos Williams,Moderate,T. S. Eliot\u2019s The Waste Land and Joyce\u2019s Ulysses were both published in 1922.,\"In Homer\u2019s Odyssey, Odysseus\u2019s old dog Argos is the first to recognize him after twenty years away.\",John Steinbeck\u2019s East of Eden (1952) takes its title from the story of Cain in the Book of Genesis.\n15,Odyssey characters,Odysseus,Penelope,Telemachus,Polyphemus,Moderate,T. S. Eliot\u2019s The Waste Land and Joyce\u2019s Ulysses were both published in 1922.,\"In Homer\u2019s Odyssey, Odysseus\u2019s old dog Argos is the first to recognize him after twenty years away.\",John Steinbeck\u2019s East of Eden (1952) takes its title from the story of Cain in the Book of Genesis.\n15,Dystopian novels,1984,Brave New World,Fahrenheit 451,We,Moderate,T. S. Eliot\u2019s The Waste Land and Joyce\u2019s Ulysses were both published in 1922.,\"In Homer\u2019s Odyssey, Odysseus\u2019s old dog Argos is the first to recognize him after twenty years away.\",John Steinbeck\u2019s East of Eden (1952) takes its title from the story of Cain in the Book of Genesis.\n15,Novels with a compass direction in the title,Northanger Abbey,South Riding,East of Eden,Westward Ho!,Moderate,T. S. Eliot\u2019s The Waste Land and Joyce\u2019s Ulysses were both published in 1922.,\"In Homer\u2019s Odyssey, Odysseus\u2019s old dog Argos is the first to recognize him after twenty years away.\",John Steinbeck\u2019s East of Eden (1952) takes its title from the story of Cain in the Book of Genesis.\n16,Science-fiction grandmasters,Isaac Asimov,Arthur C. Clarke,Ursula K. Le Guin,Octavia Butler,Easy,Isaac Asimov\u2019s Three Laws of Robotics were first stated together in his 1942 story \u201cRunaround.\u201d,H. G. Wells\u2019s The War of the Worlds was serialized in Pearson\u2019s Magazine in 1897.,Charlotte Bront\u00eb\u2019s Jane Eyre (1847) was published under the name Currer Bell.\n16,To Kill a Mockingbird characters,Scout Finch,Atticus Finch,Jem Finch,Boo Radley,Easy,Isaac Asimov\u2019s Three Laws of Robotics were first stated together in his 1942 story \u201cRunaround.\u201d,H. G. Wells\u2019s The War of the Worlds was serialized in Pearson\u2019s Magazine in 1897.,Charlotte Bront\u00eb\u2019s Jane Eyre (1847) was published under the name Currer Bell.\n16,Victorian novels,Great Expectations,Jane Eyre,Middlemarch,Wuthering Heights,Easy,Isaac Asimov\u2019s Three Laws of Robotics were first stated together in his 1942 story \u201cRunaround.\u201d,H. G. Wells\u2019s The War of the Worlds was serialized in Pearson\u2019s Magazine in 1897.,Charlotte Bront\u00eb\u2019s Jane Eyre (1847) was published under the name Currer Bell.\n16,Authors known by initials,J.R.R. Tolkien,H.G. Wells,F. Scott Fitzgerald,E.M. Forster,Easy,Isaac Asimov\u2019s Three Laws of Robotics were first stated together in his 1942 story \u201cRunaround.\u201d,H. G. Wells\u2019s The War of the Worlds was serialized in Pearson\u2019s Magazine in 1897.,Charlotte Bront\u00eb\u2019s Jane Eyre (1847) was published under the name Currer Bell.\n17,Writers famously associated with a single novel,Harper Lee,Emily Bront\u00eb,Mary Shelley,Margaret Mitchell,Difficult,Margaret Mitchell\u2019s Gone with the Wind (1936) won the Pulitzer Prize for Fiction in 1937.,\"Mary Shelley began Frankenstein at age 18, during a rainy summer near Lake Geneva in 1816.\",\"\u201cWherefore art thou Romeo?\u201d asks Juliet why he is Romeo, not where he is.\"\n17,Titles that are also common nouns,Beloved,Possession,Persuasion,Restoration,Difficult,Margaret Mitchell\u2019s Gone with the Wind (1936) won the Pulitzer Prize for Fiction in 1937.,\"Mary Shelley began Frankenstein at age 18, during a rainy summer near Lake Geneva in 1816.\",\"\u201cWherefore art thou Romeo?\u201d asks Juliet why he is Romeo, not where he is.\"\n17,Shakespeare plays set in Italy,Romeo and Juliet,The Merchant of Venice,Othello,Much Ado About Nothing,Difficult,Margaret Mitchell\u2019s Gone with the Wind (1936) won the Pulitzer Prize for Fiction in 1937.,\"Mary Shelley began Frankenstein at age 18, during a rainy summer near Lake Geneva in 1816.\",\"\u201cWherefore art thou Romeo?\u201d asks Juliet why he is Romeo, not where he is.\"\n17,Authors with three names,Gabriel Garc\u00eda M\u00e1rquez,William Carlos Williams,Zora Neale Hurston,F. Scott Fitzgerald,Difficult,Margaret Mitchell\u2019s Gone with the Wind (1936) won the Pulitzer Prize for Fiction in 1937.,\"Mary Shelley began Frankenstein at age 18, during a rainy summer near Lake Geneva in 1816.\",\"\u201cWherefore art thou Romeo?\u201d asks Juliet why he is Romeo, not where he is.\"\n18,Latin American Boom authors,Gabriel Garc\u00eda M\u00e1rquez,Julio Cort\u00e1zar,Mario Vargas Llosa,Carlos Fuentes,Moderate,Gabriel Garc\u00eda M\u00e1rquez won the Nobel Prize in Literature in 1982.,Samuel Richardson\u2019s Pamela (1740) is often counted among the first English novels.,Orwell\u2019s Room 101 is said to be named after a conference room at the BBC.\n18,1984 characters,Winston Smith,Julia,O\u2019Brien,Big Brother,Moderate,Gabriel Garc\u00eda M\u00e1rquez won the Nobel Prize in Literature in 1982.,Samuel Richardson\u2019s Pamela (1740) is often counted among the first English novels.,Orwell\u2019s Room 101 is said to be named after a conference room at the BBC.\n18,Epistolary novels,Dracula,The Color Purple,Pamela,Les Liaisons Dangereuses,Moderate,Gabriel Garc\u00eda M\u00e1rquez won the Nobel Prize in Literature in 1982.,Samuel Richardson\u2019s Pamela (1740) is often counted among the first English novels.,Orwell\u2019s Room 101 is said to be named after a conference room at the BBC.\n18,Author surnames that are common English words,Swift,Hardy,Sharp,Fielding,Moderate,Gabriel Garc\u00eda M\u00e1rquez won the Nobel Prize in Literature in 1982.,Samuel Richardson\u2019s Pamela (1740) is often counted among the first English novels.,Orwell\u2019s Room 101 is said to be named after a conference room at the BBC.\n19,Authors who used pen names,George Eliot,George Orwell,Lewis Carroll,Mark Twain,Easy,George Orwell was the pen name of Eric Arthur Blair.,\"Emma opens: \u201cEmma Woodhouse, handsome, clever, and rich\u2026\u201d\",Yann Martel\u2019s Life of Pi won the Booker Prize in 2002.\n19,Emma characters,Emma Woodhouse,Mr. Knightley,Harriet Smith,Frank Churchill,Easy,George Orwell was the pen name of Eric Arthur Blair.,\"Emma opens: \u201cEmma Woodhouse, handsome, clever, and rich\u2026\u201d\",Yann Martel\u2019s Life of Pi won the Booker Prize in 2002.\n19,Booker Prize winners,Midnight\u2019s Children,The Remains of the Day,Life of Pi,Lincoln in the Bardo,Easy,George Orwell was the pen name of Eric Arthur Blair.,\"Emma opens: \u201cEmma Woodhouse, handsome, clever, and rich\u2026\u201d\",Yann Martel\u2019s Life of Pi won the Booker Prize in 2002.\n19,Books with a number in the title,Slaughterhouse-Five,Catch-22,The Three-Body Problem,Fahrenheit 451,Easy,George Orwell was the pen name of Eric Arthur Blair.,\"Emma opens: \u201cEmma Woodhouse, handsome, clever, and rich\u2026\u201d\",Yann Martel\u2019s Life of Pi won the Booker Prize in 2002.\n20,Irish writers,James Joyce,W.B. Yeats,Oscar Wilde,Samuel Beckett,Moderate,Oscar Wilde\u2019s The Picture of Dorian Gray first appeared in Lippincott\u2019s Monthly Magazine in 1890.,Samuel Beckett won the Nobel Prize in Literature in 1969.,\"\u201cA rose by any other name would smell as sweet.\u201d \u2014 Juliet, Romeo and Juliet\"\n20,Romeo and Juliet characters,Romeo,Juliet,Mercutio,Tybalt,Moderate,Oscar Wilde\u2019s The Picture of Dorian Gray first appeared in Lippincott\u2019s Monthly Magazine in 1890.,Samuel Beckett won the Nobel Prize in Literature in 1969.,\"\u201cA rose by any other name would smell as sweet.\u201d \u2014 Juliet, Romeo and Juliet\"\n20,Books set in London,Mrs Dalloway,Great Expectations,The Picture of Dorian Gray,Neverwhere,Moderate,Oscar Wilde\u2019s The Picture of Dorian Gray first appeared in Lippincott\u2019s Monthly Magazine in 1890.,Samuel Beckett won the Nobel Prize in Literature in 1969.,\"\u201cA rose by any other name would smell as sweet.\u201d \u2014 Juliet, Romeo and Juliet\"\n20,Novels titled after places/estates,Middlemarch,Wuthering Heights,Mansfield Park,Northanger Abbey,Moderate,Oscar Wilde\u2019s The Picture of Dorian Gray first appeared in Lippincott\u2019s Monthly Magazine in 1890.,Samuel Beckett won the Nobel Prize in Literature in 1969.,\"\u201cA rose by any other name would smell as sweet.\u201d \u2014 Juliet, Romeo and Juliet\"\n21,Beat Generation writers,Jack Kerouac,Allen Ginsberg,William S. Burroughs,Lawrence Ferlinghetti,Easy,John Steinbeck\u2019s The Grapes of Wrath (1939) won the Pulitzer Prize for Fiction in 1940.,\"Toni Morrison\u2019s Beloved was inspired by the true story of Margaret Garner, an enslaved woman who fled to Ohio in 1856.\",Cormac McCarthy\u2019s The Road won the Pulitzer Prize for Fiction in 2007.\n21,Pride and Prejudice surnames,Bennet,Darcy,Bingley,Collins,Easy,John Steinbeck\u2019s The Grapes of Wrath (1939) won the Pulitzer Prize for Fiction in 1940.,\"Toni Morrison\u2019s Beloved was inspired by the true story of Margaret Garner, an enslaved woman who fled to Ohio in 1856.\",Cormac McCarthy\u2019s The Road won the Pulitzer Prize for Fiction in 2007.\n21,Pulitzer Prize for Fiction winners,The Grapes of Wrath,To Kill a Mockingbird,The Road,Middlesex,Easy,John Steinbeck\u2019s The Grapes of Wrath (1939) won the Pulitzer Prize for Fiction in 1940.,\"Toni Morrison\u2019s Beloved was inspired by the true story of Margaret Garner, an enslaved woman who fled to Ohio in 1856.\",Cormac McCarthy\u2019s The Road won the Pulitzer Prize for Fiction in 2007.\n21,One-word novels,Beloved,Possession,Persuasion,Frankenstein,Easy,John Steinbeck\u2019s The Grapes of Wrath (1939) won the Pulitzer Prize for Fiction in 1940.,\"Toni Morrison\u2019s Beloved was inspired by the true story of Margaret Garner, an enslaved woman who fled to Ohio in 1856.\",Cormac McCarthy\u2019s The Road won the Pulitzer Prize for Fiction in 2007.\n22,Fictional mice and rats,Templeton,Reepicheep,Despereaux,Stuart Little,Difficult,Franz Kafka worked for an insurance institute in Prague while writing his fiction.,\"Anthony Trollope, a longtime Post Office official, is credited with introducing roadside pillar boxes in Britain.\",\"E. B. White\u2019s Charlotte\u2019s Web (1952), with its rat Templeton, was illustrated by Garth Williams.\"\n22,Writers with long office day jobs,T. S. Eliot,Anthony Trollope,Franz Kafka,Wallace Stevens,Difficult,Franz Kafka worked for an insurance institute in Prague while writing his fiction.,\"Anthony Trollope, a longtime Post Office official, is credited with introducing roadside pillar boxes in Britain.\",\"E. B. White\u2019s Charlotte\u2019s Web (1952), with its rat Templeton, was illustrated by Garth Williams.\"\n22,Orphans of fiction,Oliver Twist,Jane Eyre,Pip,Anne Shirley,Difficult,Franz Kafka worked for an insurance institute in Prague while writing his fiction.,\"Anthony Trollope, a longtime Post Office official, is credited with introducing roadside pillar boxes in Britain.\",\"E. B. White\u2019s Charlotte\u2019s Web (1952), with its rat Templeton, was illustrated by Garth Williams.\"\n22,Writers named John (surnames),Milton,Steinbeck,Updike,Donne,Difficult,Franz Kafka worked for an insurance institute in Prague while writing his fiction.,\"Anthony Trollope, a longtime Post Office official, is credited with introducing roadside pillar boxes in Britain.\",\"E. B. White\u2019s Charlotte\u2019s Web (1952), with its rat Templeton, was illustrated by Garth Williams.\"\n23,Modernist novelists,James Joyce,Virginia Woolf,William Faulkner,Marcel Proust,Moderate,Marcel Proust paid for the first edition of Swann\u2019s Way (1913) himself after publishers turned it down.,Virginia Woolf and her husband Leonard founded the Hogarth Press in 1917.,\"\u201cTo be, or not to be, that is the question.\u201d \u2014 Hamlet\"\n23,Hamlet characters,Hamlet,Ophelia,Claudius,Gertrude,Moderate,Marcel Proust paid for the first edition of Swann\u2019s Way (1913) himself after publishers turned it down.,Virginia Woolf and her husband Leonard founded the Hogarth Press in 1917.,\"\u201cTo be, or not to be, that is the question.\u201d \u2014 Hamlet\"\n23,Shakespeare comedies,A Midsummer Night\u2019s Dream,Twelfth Night,Much Ado About Nothing,As You Like It,Moderate,Marcel Proust paid for the first edition of Swann\u2019s Way (1913) himself after publishers turned it down.,Virginia Woolf and her husband Leonard founded the Hogarth Press in 1917.,\"\u201cTo be, or not to be, that is the question.\u201d \u2014 Hamlet\"\n23,Novels with a compass direction in the title,Northanger Abbey,South Riding,East of Eden,Westward Ho!,Moderate,Marcel Proust paid for the first edition of Swann\u2019s Way (1913) himself after publishers turned it down.,Virginia Woolf and her husband Leonard founded the Hogarth Press in 1917.,\"\u201cTo be, or not to be, that is the question.\u201d \u2014 Hamlet\"\n24,Victorian novels,Great Expectations,Jane Eyre,Middlemarch,Wuthering Heights,Easy,Middlemarch was published in eight installments between December 1871 and December 1872.,Margaret Atwood\u2019s The Handmaid\u2019s Tale was published in 1985.,\"\u201cOut, damned spot! Out, I say!\u201d \u2014 Lady Macbeth\"\n24,Macbeth characters,Macbeth,Lady Macbeth,Banquo,Macduff,Easy,Middlemarch was published in eight installments between December 1871 and December 1872.,Margaret Atwood\u2019s The Handmaid\u2019s Tale was published in 1985.,\"\u201cOut, damned spot! Out, I say!\u201d \u2014 Lady Macbeth\"\n24,Fictional wizards/mages,Gandalf,Merlin,Albus Dumbledore,Rincewind,Easy,Middlemarch was published in eight installments between December 1871 and December 1872.,Margaret Atwood\u2019s The Handmaid\u2019s Tale was published in 1985.,\"\u201cOut, damned spot! Out, I say!\u201d \u2014 Lady Macbeth\"\n24,Novels with a body part in the title,Heart of Darkness,The Handmaid\u2019s Tale,The Bone People,Their Eyes Were Watching God,Easy,Middlemarch was published in eight installments between December 1871 and December 1872.,Margaret Atwood\u2019s The Handmaid\u2019s Tale was published in 1985.,\"\u201cOut, damned spot! Out, I say!\u201d \u2014 Lady Macbeth\"\n25,Latin American Boom authors,Gabriel Garc\u00eda M\u00e1rquez,Julio Cort\u00e1zar,Carlos Fuentes,Jos\u00e9 Donoso,Moderate,Julio Cort\u00e1zar\u2019s Hopscotch (1963) can be read in two different orders.,Goethe\u2019s The Sorrows of Young Werther (1774) made him famous across Europe.,\"Alice Walker\u2019s The Color Purple is told in letters, first to God and later to the narrator\u2019s sister Nettie.\"\n25,Authors with three names,William Carlos Williams,Zora Neale Hurston,F. Scott Fitzgerald,Joyce Carol Oates,Moderate,Julio Cort\u00e1zar\u2019s Hopscotch (1963) can be read in two different orders.,Goethe\u2019s The Sorrows of Young Werther (1774) made him famous across Europe.,\"Alice Walker\u2019s The Color Purple is told in letters, first to God and later to the narrator\u2019s sister Nettie.\"\n25,Novels with a color word,The Red and the Black,The Color Purple,The White Tiger,The Blue Flower,Moderate,Julio Cort\u00e1zar\u2019s Hopscotch (1963) can be read in two different orders.,Goethe\u2019s The Sorrows of Young Werther (1774) made him famous across Europe.,\"Alice Walker\u2019s The Color Purple is told in letters, first to God and later to the narrator\u2019s sister Nettie.\"\n25,Epistolary novels,Dracula,The Sorrows of Young Werther,Pamela,Les Liaisons Dangereuses,Moderate,Julio Cort\u00e1zar\u2019s Hopscotch (1963) can be read in two different orders.,Goethe\u2019s The Sorrows of Young Werther (1774) made him famous across Europe.,\"Alice Walker\u2019s The Color Purple is told in letters, first to God and later to the narrator\u2019s sister Nettie.\"\n26,Fictional cats,Cheshire Cat,Crookshanks,Behemoth,Macavity,Difficult,Aurore Dupin adopted the pen name George Sand with her 1832 novel Indiana.,\"Charles Dickens signed his early sketches \u201cBoz,\u201d a family nickname for his younger brother.\",T. S. Eliot\u2019s Old Possum\u2019s Book of Practical Cats (1939) inspired the musical Cats and gave us Macavity.\n26,Fictional butlers and valets,Jeeves,Stevens,Bunter,Passepartout,Difficult,Aurore Dupin adopted the pen name George Sand with her 1832 novel Indiana.,\"Charles Dickens signed his early sketches \u201cBoz,\u201d a family nickname for his younger brother.\",T. S. Eliot\u2019s Old Possum\u2019s Book of Practical Cats (1939) inspired the musical Cats and gave us Macavity.\n26,Characters with flower first names,Daisy Buchanan,Lily Bart,Violet Beauregarde,Petunia Dursley,Difficult,Aurore Dupin adopted the pen name George Sand with her 1832 novel Indiana.,\"Charles Dickens signed his early sketches \u201cBoz,\u201d a family nickname for his younger brother.\",T. S. Eliot\u2019s Old Possum\u2019s Book of Practical Cats (1939) inspired the musical Cats and gave us Macavity.\n26,Pen names of famous authors,Currer Bell,Boz,George Sand,Richard Bachman,Difficult,Aurore Dupin adopted the pen name George Sand with her 1832 novel Indiana.,\"Charles Dickens signed his early sketches \u201cBoz,\u201d a family nickname for his younger brother.\",T. S. Eliot\u2019s Old Possum\u2019s Book of Practical Cats (1939) inspired the musical Cats and gave us Macavity.\n27,Harlem Renaissance writers,Langston Hughes,Zora Neale Hurston,Countee Cullen,Claude McKay,Easy,Horace Walpole\u2019s The Castle of Otranto (1764) is widely considered the first Gothic novel.,L. Frank Baum\u2019s The Wonderful Wizard of Oz was published in 1900.,The limerick\u2019s five-line AABBA form was popularized by Edward Lear\u2019s A Book of Nonsense (1846).\n27,Gothic novels,Frankenstein,Dracula,The Mysteries of Udolpho,The Picture of Dorian Gray,Easy,Horace Walpole\u2019s The Castle of Otranto (1764) is widely considered the first Gothic novel.,L. Frank Baum\u2019s The Wonderful Wizard of Oz was published in 1900.,The limerick\u2019s five-line AABBA form was popularized by Edward Lear\u2019s A Book of Nonsense (1846).\n27,Fictional realms,Narnia,Middle-earth,Wonderland,Oz,Easy,Horace Walpole\u2019s The Castle of Otranto (1764) is widely considered the first Gothic novel.,L. Frank Baum\u2019s The Wonderful Wizard of Oz was published in 1900.,The limerick\u2019s five-line AABBA form was popularized by Edward Lear\u2019s A Book of Nonsense (1846).\n27,Poetic forms,sonnet,villanelle,haiku,limerick,Easy,Horace Walpole\u2019s The Castle of Otranto (1764) is widely considered the first Gothic novel.,L. Frank Baum\u2019s The Wonderful Wizard of Oz was published in 1900.,The limerick\u2019s five-line AABBA form was popularized by Edward Lear\u2019s A Book of Nonsense (1846).\n28,Nobel laureates in Literature,Toni Morrison,Kazuo Ishiguro,Gabriel Garc\u00eda M\u00e1rquez,Doris Lessing,Moderate,\"Doris Lessing, who won the Nobel Prize in 2007, was born in Persia and raised in Southern Rhodesia.\",Dickens\u2019s Great Expectations was serialized in his magazine All the Year Round from 1860 to 1861.,\"\u201cA plague o\u2019 both your houses!\u201d \u2014 Mercutio, Romeo and Juliet\"\n28,Romeo and Juliet characters,Romeo,Juliet,Mercutio,Tybalt,Moderate,\"Doris Lessing, who won the Nobel Prize in 2007, was born in Persia and raised in Southern Rhodesia.\",Dickens\u2019s Great Expectations was serialized in his magazine All the Year Round from 1860 to 1861.,\"\u201cA plague o\u2019 both your houses!\u201d \u2014 Mercutio, Romeo and Juliet\"\n28,Books set in London,Mrs Dalloway,Great Expectations,The Picture of Dorian Gray,Neverwhere,Moderate,\"Doris Lessing, who won the Nobel Prize in 2007, was born in Persia and raised in Southern Rhodesia.\",Dickens\u2019s Great Expectations was serialized in his magazine All the Year Round from 1860 to 1861.,\"\u201cA plague o\u2019 both your houses!\u201d \u2014 Mercutio, Romeo and Juliet\"\n28,Novels titled after places/estates,Middlemarch,Wuthering Heights,Mansfield Park,Northanger Abbey,Moderate,\"Doris Lessing, who won the Nobel Prize in 2007, was born in Persia and raised in Southern Rhodesia.\",Dickens\u2019s Great Expectations was serialized in his magazine All the Year Round from 1860 to 1861.,\"\u201cA plague o\u2019 both your houses!\u201d \u2014 Mercutio, Romeo and Juliet\"\n29,Science-fiction grandmasters,Isaac Asimov,Arthur C. Clarke,Ursula K. Le Guin,Octavia Butler,Easy,\"Octavia Butler was the first science-fiction writer to receive a MacArthur Fellowship, in 1995.\",Harper Lee based the character Dill in To Kill a Mockingbird on her childhood friend Truman Capote.,Aravind Adiga\u2019s The White Tiger won the Booker Prize in 2008.\n29,To Kill a Mockingbird characters,Scout Finch,Atticus Finch,Jem Finch,Boo Radley,Easy,\"Octavia Butler was the first science-fiction writer to receive a MacArthur Fellowship, in 1995.\",Harper Lee based the character Dill in To Kill a Mockingbird on her childhood friend Truman Capote.,Aravind Adiga\u2019s The White Tiger won the Booker Prize in 2008.\n29,Novels with a color word in the title,The Red and the Black,The Color Purple,The White Tiger,The Blue Flower,Easy,\"Octavia Butler was the first science-fiction writer to receive a MacArthur Fellowship, in 1995.\",Harper Lee based the character Dill in To Kill a Mockingbird on her childhood friend Truman Capote.,Aravind Adiga\u2019s The White Tiger won the Booker Prize in 2008.\n29,Authors known by initials,J.R.R. Tolkien,H.G. Wells,F. Scott Fitzgerald,E.M. Forster,Easy,\"Octavia Butler was the first science-fiction writer to receive a MacArthur Fellowship, in 1995.\",Harper Lee based the character Dill in To Kill a Mockingbird on her childhood friend Truman Capote.,Aravind Adiga\u2019s The White Tiger won the Booker Prize in 2008.\n30,One-word novels,Ulysses,Frankenstein,Rebecca,Dracula,Moderate,\"Frankenstein; or, The Modern Prometheus was first published anonymously in 1818.\",A. S. Byatt\u2019s Possession won the Booker Prize in 1990.,Rebecca opens: \u201cLast night I dreamt I went to Manderley again.\u201d\n30,Novels whose titles are also common nouns,Beloved,Possession,Persuasion,Restoration,Moderate,\"Frankenstein; or, The Modern Prometheus was first published anonymously in 1818.\",A. S. Byatt\u2019s Possession won the Booker Prize in 1990.,Rebecca opens: \u201cLast night I dreamt I went to Manderley again.\u201d\n30,Pulitzer Prize for Fiction winners,The Grapes of Wrath,To Kill a Mockingbird,Middlesex,The Road,Moderate,\"Frankenstein; or, The Modern Prometheus was first published anonymously in 1818.\",A. S. Byatt\u2019s Possession won the Booker Prize in 1990.,Rebecca opens: \u201cLast night I dreamt I went to Manderley again.\u201d\n30,Titles with a color word,The Red and the Black,The Color Purple,The White Tiger,The Blue Flower,Moderate,\"Frankenstein; or, The Modern Prometheus was first published anonymously in 1818.\",A. S. Byatt\u2019s Possession won the Booker Prize in 1990.,Rebecca opens: \u201cLast night I dreamt I went to Manderley again.\u201d\n31,Dystopian novels,1984,Brave New World,Fahrenheit 451,We,Easy,\"War and Peace was published in installments beginning in 1865, and as a complete book in 1869.\",Orwell\u2019s Nineteen Eighty-Four was published in June 1949.,Dostoevsky\u2019s Crime and Punishment first appeared in The Russian Messenger in 1866.\n31,1984 characters,Winston Smith,Julia,O\u2019Brien,Big Brother,Easy,\"War and Peace was published in installments beginning in 1865, and as a complete book in 1869.\",Orwell\u2019s Nineteen Eighty-Four was published in June 1949.,Dostoevsky\u2019s Crime and Punishment first appeared in The Russian Messenger in 1866.\n31,Russian novels,Crime and Punishment,War and Peace,Anna Karenina,The Brothers Karamazov,Easy,\"War and Peace was published in installments beginning in 1865, and as a complete book in 1869.\",Orwell\u2019s Nineteen Eighty-Four was published in June 1949.,Dostoevsky\u2019s Crime and Punishment first appeared in The Russian Messenger in 1866.\n31,Books with a number in the title,Slaughterhouse-Five,Catch-22,The Three-Body Problem,One Hundred Years of Solitude,Easy,\"War and Peace was published in installments beginning in 1865, and as a complete book in 1869.\",Orwell\u2019s Nineteen Eighty-Four was published in June 1949.,Dostoevsky\u2019s Crime and Punishment first appeared in The Russian Messenger in 1866.\n32,Sherlock Holmes novels,A Study in Scarlet,The Sign of the Four,The Hound of the Baskervilles,The Valley of Fear,Difficult,The Hound of the Baskervilles was serialized in The Strand Magazine in 1901\u20131902.,\"Alfred, Lord Tennyson served as Poet Laureate for 42 years, from 1850 to 1892.\",Pablo Neruda won the Nobel Prize in Literature in 1971.\n32,Fictional teachers,Mr. Chips,Miss Jean Brodie,Miss Honey,Ichabod Crane,Difficult,The Hound of the Baskervilles was serialized in The Strand Magazine in 1901\u20131902.,\"Alfred, Lord Tennyson served as Poet Laureate for 42 years, from 1850 to 1892.\",Pablo Neruda won the Nobel Prize in Literature in 1971.\n32,UK Poets Laureate,Tennyson,Betjeman,Ted Hughes,Carol Ann Duffy,Difficult,The Hound of the Baskervilles was serialized in The Strand Magazine in 1901\u20131902.,\"Alfred, Lord Tennyson served as Poet Laureate for 42 years, from 1850 to 1892.\",Pablo Neruda won the Nobel Prize in Literature in 1971.\n32,Latin American Nobel laureates in Literature,Pablo Neruda,Octavio Paz,Gabriela Mistral,Mario Vargas Llosa,Difficult,The Hound of the Baskervilles was serialized in The Strand Magazine in 1901\u20131902.,\"Alfred, Lord Tennyson served as Poet Laureate for 42 years, from 1850 to 1892.\",Pablo Neruda won the Nobel Prize in Literature in 1971.\n33,Alice in Wonderland characters,White Rabbit,Mad Hatter,Dormouse,Caterpillar,Moderate,\"Lewis Carroll first told the Alice story on a boat trip on July 4, 1862, to the real Alice Liddell.\",Only seven complete tragedies each survive from Aeschylus and from Sophocles.,\"In Shakespeare\u2019s day boys played women\u2019s roles, so Viola and Rosalind were boys playing girls disguised as boys.\"\n33,Ancient Greek dramatists,Aeschylus,Sophocles,Euripides,Aristophanes,Moderate,\"Lewis Carroll first told the Alice story on a boat trip on July 4, 1862, to the real Alice Liddell.\",Only seven complete tragedies each survive from Aeschylus and from Sophocles.,\"In Shakespeare\u2019s day boys played women\u2019s roles, so Viola and Rosalind were boys playing girls disguised as boys.\"\n33,Fictional schools,Hogwarts,Lowood,Dotheboys Hall,Malory Towers,Moderate,\"Lewis Carroll first told the Alice story on a boat trip on July 4, 1862, to the real Alice Liddell.\",Only seven complete tragedies each survive from Aeschylus and from Sophocles.,\"In Shakespeare\u2019s day boys played women\u2019s roles, so Viola and Rosalind were boys playing girls disguised as boys.\"\n33,Shakespeare heroines who disguise as men,Viola,Rosalind,Portia,Imogen,Moderate,\"Lewis Carroll first told the Alice story on a boat trip on July 4, 1862, to the real Alice Liddell.\",Only seven complete tragedies each survive from Aeschylus and from Sophocles.,\"In Shakespeare\u2019s day boys played women\u2019s roles, so Viola and Rosalind were boys playing girls disguised as boys.\"\n34,Irish writers,James Joyce,Oscar Wilde,Samuel Beckett,Bram Stoker,Easy,Bram Stoker managed the Lyceum Theatre in London for the actor Henry Irving.,Ann Radcliffe\u2019s The Mysteries of Udolpho appeared in 1794.,Sherlock Holmes made his debut in A Study in Scarlet (1887).\n34,Gothic novels,Frankenstein,Dracula,The Mysteries of Udolpho,The Picture of Dorian Gray,Easy,Bram Stoker managed the Lyceum Theatre in London for the actor Henry Irving.,Ann Radcliffe\u2019s The Mysteries of Udolpho appeared in 1794.,Sherlock Holmes made his debut in A Study in Scarlet (1887).\n34,Fictional detectives,Sherlock Holmes,Hercule Poirot,Miss Marple,Philip Marlowe,Easy,Bram Stoker managed the Lyceum Theatre in London for the actor Henry Irving.,Ann Radcliffe\u2019s The Mysteries of Udolpho appeared in 1794.,Sherlock Holmes made his debut in A Study in Scarlet (1887).\n34,Authors who used pen names,George Eliot,George Orwell,Lewis Carroll,Mark Twain,Easy,Bram Stoker managed the Lyceum Theatre in London for the actor Henry Irving.,Ann Radcliffe\u2019s The Mysteries of Udolpho appeared in 1794.,Sherlock Holmes made his debut in A Study in Scarlet (1887).\n35,Hamlet characters,Hamlet,Ophelia,Claudius,Gertrude,Moderate,Macbeth is Shakespeare\u2019s shortest tragedy.,\"\u201cBeware the Ides of March.\u201d \u2014 the soothsayer, Julius Caesar\",Hamlet is Shakespeare\u2019s longest play.\n35,Macbeth characters,Macbeth,Lady Macbeth,Banquo,Macduff,Moderate,Macbeth is Shakespeare\u2019s shortest tragedy.,\"\u201cBeware the Ides of March.\u201d \u2014 the soothsayer, Julius Caesar\",Hamlet is Shakespeare\u2019s longest play.\n35,Shakespeare tragedies,Romeo and Juliet,Othello,King Lear,Timon of Athens,Moderate,Macbeth is Shakespeare\u2019s shortest tragedy.,\"\u201cBeware the Ides of March.\u201d \u2014 the soothsayer, Julius Caesar\",Hamlet is Shakespeare\u2019s longest play.\n35,Shakespeare\u2019s Roman plays,Julius Caesar,Antony and Cleopatra,Coriolanus,Titus Andronicus,Moderate,Macbeth is Shakespeare\u2019s shortest tragedy.,\"\u201cBeware the Ides of March.\u201d \u2014 the soothsayer, Julius Caesar\",Hamlet is Shakespeare\u2019s longest play.\n36,Fictional sea captains,Captain Ahab,Captain Nemo,Captain Hook,Captain Queeg,Difficult,Herman Melville dedicated Moby-Dick to Nathaniel Hawthorne.,Ernest Hemingway was wounded in Italy in July 1918 while serving with the Red Cross.,Thomas Mann won the Nobel Prize in Literature in 1929.\n36,First lines of famous novels,Call me Ishmael,It was the best of times,Last night I dreamt I went to Manderley again,It is a truth universally acknowledged,Difficult,Herman Melville dedicated Moby-Dick to Nathaniel Hawthorne.,Ernest Hemingway was wounded in Italy in July 1918 while serving with the Red Cross.,Thomas Mann won the Nobel Prize in Literature in 1929.\n36,Writers who drove ambulances in World War I,Ernest Hemingway,John Dos Passos,E. E. Cummings,W. Somerset Maugham,Difficult,Herman Melville dedicated Moby-Dick to Nathaniel Hawthorne.,Ernest Hemingway was wounded in Italy in July 1918 while serving with the Red Cross.,Thomas Mann won the Nobel Prize in Literature in 1929.\n36,Writers named Thomas (surnames),Hardy,Mann,Pynchon,Wolfe,Difficult,Herman Melville dedicated Moby-Dick to Nathaniel Hawthorne.,Ernest Hemingway was wounded in Italy in July 1918 while serving with the Red Cross.,Thomas Mann won the Nobel Prize in Literature in 1929.\n37,Authors known by initials,J.R.R. Tolkien,H.G. Wells,F. Scott Fitzgerald,E.M. Forster,Easy,J. R. R. Tolkien\u2019s The Hobbit was first published in 1937.,George Saunders\u2019s Lincoln in the Bardo (2017) was his first novel.,Robert Louis Stevenson began Treasure Island while entertaining his stepson Lloyd Osbourne.\n37,Authors with three names,Gabriel Garc\u00eda M\u00e1rquez,William Carlos Williams,Zora Neale Hurston,Robert Louis Stevenson,Easy,J. R. R. Tolkien\u2019s The Hobbit was first published in 1937.,George Saunders\u2019s Lincoln in the Bardo (2017) was his first novel.,Robert Louis Stevenson began Treasure Island while entertaining his stepson Lloyd Osbourne.\n37,Booker Prize winners,Midnight\u2019s Children,The Remains of the Day,Life of Pi,Lincoln in the Bardo,Easy,J. R. R. Tolkien\u2019s The Hobbit was first published in 1937.,George Saunders\u2019s Lincoln in the Bardo (2017) was his first novel.,Robert Louis Stevenson began Treasure Island while entertaining his stepson Lloyd Osbourne.\n37,Novels with a number in the title,Slaughterhouse-Five,Catch-22,The Three-Body Problem,Fahrenheit 451,Easy,J. R. R. Tolkien\u2019s The Hobbit was first published in 1937.,George Saunders\u2019s Lincoln in the Bardo (2017) was his first novel.,Robert Louis Stevenson began Treasure Island while entertaining his stepson Lloyd Osbourne.\n38,Pride and Prejudice characters,Elizabeth Bennet,Mr. Darcy,Jane Bennet,Mr. Bingley,Moderate,Emma (1815) was dedicated to the Prince Regent.,\u201cIt is a truth universally acknowledged\u2026\u201d \u2014 the opening of Pride and Prejudice,E. M. Forster\u2019s Howards End carries the epigraph \u201cOnly connect.\u201d\n38,Emma characters,Emma Woodhouse,Mr. Knightley,Harriet Smith,Frank Churchill,Moderate,Emma (1815) was dedicated to the Prince Regent.,\u201cIt is a truth universally acknowledged\u2026\u201d \u2014 the opening of Pride and Prejudice,E. M. Forster\u2019s Howards End carries the epigraph \u201cOnly connect.\u201d\n38,Austen novels,Pride and Prejudice,Sense and Sensibility,Mansfield Park,Northanger Abbey,Moderate,Emma (1815) was dedicated to the Prince Regent.,\u201cIt is a truth universally acknowledged\u2026\u201d \u2014 the opening of Pride and Prejudice,E. M. Forster\u2019s Howards End carries the epigraph \u201cOnly connect.\u201d\n38,Novels titled after places/estates,Middlemarch,Wuthering Heights,Howards End,Brideshead Revisited,Moderate,Emma (1815) was dedicated to the Prince Regent.,\u201cIt is a truth universally acknowledged\u2026\u201d \u2014 the opening of Pride and Prejudice,E. M. Forster\u2019s Howards End carries the epigraph \u201cOnly connect.\u201d\n39,Fictional horses,Black Beauty,Rocinante,Shadowfax,Boxer,Difficult,\"Anna Sewell\u2019s Black Beauty was published in 1877, shortly before her death in 1878.\",\"The name of Don Quixote\u2019s horse Rocinante plays on roc\u00edn, a Spanish word for a workhorse.\",Henry David Thoreau lived at Walden Pond from 1845 to 1847.\n39,Titles taken from the Bible,East of Eden,The Sun Also Rises,\"Absalom, Absalom!\",Let Us Now Praise Famous Men,Difficult,\"Anna Sewell\u2019s Black Beauty was published in 1877, shortly before her death in 1878.\",\"The name of Don Quixote\u2019s horse Rocinante plays on roc\u00edn, a Spanish word for a workhorse.\",Henry David Thoreau lived at Walden Pond from 1845 to 1847.\n39,Titles taken from poems,Things Fall Apart,Tender Is the Night,Far from the Madding Crowd,\"Look Homeward, Angel\",Difficult,\"Anna Sewell\u2019s Black Beauty was published in 1877, shortly before her death in 1878.\",\"The name of Don Quixote\u2019s horse Rocinante plays on roc\u00edn, a Spanish word for a workhorse.\",Henry David Thoreau lived at Walden Pond from 1845 to 1847.\n39,Writers named Henry (surnames),James,Fielding,Miller,Thoreau,Difficult,\"Anna Sewell\u2019s Black Beauty was published in 1877, shortly before her death in 1878.\",\"The name of Don Quixote\u2019s horse Rocinante plays on roc\u00edn, a Spanish word for a workhorse.\",Henry David Thoreau lived at Walden Pond from 1845 to 1847.\n40,Fictional ships,Pequod,Hispaniola,Nautilus,Dawn Treader,Moderate,\"The Pequod in Moby-Dick is named for the Pequot, a Native American people of New England.\",The Cherry Orchard premiered at the Moscow Art Theatre in January 1904; Chekhov died that July.,Stanley Kubrick\u2019s The Shining (1980) adapted Stephen King\u2019s 1977 novel.\n40,Plays by Chekhov,The Seagull,Uncle Vanya,Three Sisters,The Cherry Orchard,Moderate,\"The Pequod in Moby-Dick is named for the Pequot, a Native American people of New England.\",The Cherry Orchard premiered at the Moscow Art Theatre in January 1904; Chekhov died that July.,Stanley Kubrick\u2019s The Shining (1980) adapted Stephen King\u2019s 1977 novel.\n40,Works by T. S. Eliot,The Waste Land,The Hollow Men,Ash-Wednesday,Four Quartets,Moderate,\"The Pequod in Moby-Dick is named for the Pequot, a Native American people of New England.\",The Cherry Orchard premiered at the Moscow Art Theatre in January 1904; Chekhov died that July.,Stanley Kubrick\u2019s The Shining (1980) adapted Stephen King\u2019s 1977 novel.\n40,Novels adapted for film by Stanley Kubrick,Lolita,A Clockwork Orange,The Shining,Barry Lyndon,Moderate,\"The Pequod in Moby-Dick is named for the Pequot, a Native American people of New England.\",The Cherry Orchard premiered at the Moscow Art Theatre in January 1904; Chekhov died that July.,Stanley Kubrick\u2019s The Shining (1980) adapted Stephen King\u2019s 1977 novel.\n41,Irish writers,James Joyce,W.B. Yeats,Oscar Wilde,Samuel Beckett,Easy,W. B. Yeats won the Nobel Prize in Literature in 1923.,\"Samuel Beckett\u2019s Waiting for Godot premiered in Paris in 1953, in French.\",\"Liu Cixin\u2019s The Three-Body Problem won the 2015 Hugo Award for Best Novel, the first for an Asian author.\"\n41,1984 characters,Winston Smith,Julia,O\u2019Brien,Big Brother,Easy,W. B. Yeats won the Nobel Prize in Literature in 1923.,\"Samuel Beckett\u2019s Waiting for Godot premiered in Paris in 1953, in French.\",\"Liu Cixin\u2019s The Three-Body Problem won the 2015 Hugo Award for Best Novel, the first for an Asian author.\"\n41,Books with a number in the title,Fahrenheit 451,Slaughterhouse-Five,The Three-Body Problem,Catch-22,Easy,W. B. Yeats won the Nobel Prize in Literature in 1923.,\"Samuel Beckett\u2019s Waiting for Godot premiered in Paris in 1953, in French.\",\"Liu Cixin\u2019s The Three-Body Problem won the 2015 Hugo Award for Best Novel, the first for an Asian author.\"\n41,Literary devices,metaphor,simile,alliteration,personification,Easy,W. B. Yeats won the Nobel Prize in Literature in 1923.,\"Samuel Beckett\u2019s Waiting for Godot premiered in Paris in 1953, in French.\",\"Liu Cixin\u2019s The Three-Body Problem won the 2015 Hugo Award for Best Novel, the first for an Asian author.\"\n42,Authors who were also spies or intelligence officers,Somerset Maugham,Graham Greene,John le Carr\u00e9,Ian Fleming,Difficult,Ian Fleming worked in British naval intelligence during World War II.,Graham Greene worked for the British intelligence service MI6 during the war.,\"John le Carr\u00e9, born David Cornwell, worked for both MI5 and MI6.\"\n42,Surnames that are also common English verbs,Swift,Hardy,Fielding,Sharp,Difficult,Ian Fleming worked in British naval intelligence during World War II.,Graham Greene worked for the British intelligence service MI6 during the war.,\"John le Carr\u00e9, born David Cornwell, worked for both MI5 and MI6.\"\n42,Novels whose titles are also place names,Middlemarch,Mansfield Park,Northanger Abbey,Wuthering Heights,Difficult,Ian Fleming worked in British naval intelligence during World War II.,Graham Greene worked for the British intelligence service MI6 during the war.,\"John le Carr\u00e9, born David Cornwell, worked for both MI5 and MI6.\"\n42,Books with a body part in the title,Heart of Darkness,The Handmaid\u2019s Tale,The Bone People,Their Eyes Were Watching God,Difficult,Ian Fleming worked in British naval intelligence during World War II.,Graham Greene worked for the British intelligence service MI6 during the war.,\"John le Carr\u00e9, born David Cornwell, worked for both MI5 and MI6.\"\n43,Novels with a compass direction in the title,Northanger Abbey,South Riding,East of Eden,Westward Ho!,Moderate,\"Westward Ho!, the Devon village, was named after Charles Kingsley\u2019s 1855 novel.\",Virginia Woolf called Middlemarch \u201cone of the few English novels written for grown-up people.\u201d,Zadie Smith\u2019s White Teeth (2000) was her first novel.\n43,Books set in London,Mrs Dalloway,Neverwhere,White Teeth,Brick Lane,Moderate,\"Westward Ho!, the Devon village, was named after Charles Kingsley\u2019s 1855 novel.\",Virginia Woolf called Middlemarch \u201cone of the few English novels written for grown-up people.\u201d,Zadie Smith\u2019s White Teeth (2000) was her first novel.\n43,Victorian novels,Great Expectations,Jane Eyre,Middlemarch,Wuthering Heights,Moderate,\"Westward Ho!, the Devon village, was named after Charles Kingsley\u2019s 1855 novel.\",Virginia Woolf called Middlemarch \u201cone of the few English novels written for grown-up people.\u201d,Zadie Smith\u2019s White Teeth (2000) was her first novel.\n43,19th-century women novelists,Jane Austen,Charlotte Bront\u00eb,Emily Bront\u00eb,George Eliot,Moderate,\"Westward Ho!, the Devon village, was named after Charles Kingsley\u2019s 1855 novel.\",Virginia Woolf called Middlemarch \u201cone of the few English novels written for grown-up people.\u201d,Zadie Smith\u2019s White Teeth (2000) was her first novel.\n44,Shakespeare\u2019s Roman plays,Julius Caesar,Antony and Cleopatra,Coriolanus,Titus Andronicus,Easy,Titus Andronicus is among the bloodiest of Shakespeare\u2019s plays.,Philip Marlowe made his debut in Raymond Chandler\u2019s The Big Sleep (1939).,Toni Morrison\u2019s Beloved won the Pulitzer Prize for Fiction in 1988.\n44,Fictional detectives,Sherlock Holmes,Hercule Poirot,Miss Marple,Philip Marlowe,Easy,Titus Andronicus is among the bloodiest of Shakespeare\u2019s plays.,Philip Marlowe made his debut in Raymond Chandler\u2019s The Big Sleep (1939).,Toni Morrison\u2019s Beloved won the Pulitzer Prize for Fiction in 1988.\n44,Gothic novels,Frankenstein,Dracula,The Mysteries of Udolpho,The Picture of Dorian Gray,Easy,Titus Andronicus is among the bloodiest of Shakespeare\u2019s plays.,Philip Marlowe made his debut in Raymond Chandler\u2019s The Big Sleep (1939).,Toni Morrison\u2019s Beloved won the Pulitzer Prize for Fiction in 1988.\n44,One-word novels,Beloved,Possession,Persuasion,Ulysses,Easy,Titus Andronicus is among the bloodiest of Shakespeare\u2019s plays.,Philip Marlowe made his debut in Raymond Chandler\u2019s The Big Sleep (1939).,Toni Morrison\u2019s Beloved won the Pulitzer Prize for Fiction in 1988.\n45,Nobel laureates in Literature,Toni Morrison,Kazuo Ishiguro,Doris Lessing,W.B. Yeats,Moderate,\"Kazuo Ishiguro was born in Nagasaki, Japan.\",Jeffrey Eugenides\u2019s Middlesex won the Pulitzer Prize for Fiction in 2003.,Ray Bradbury wrote Fahrenheit 451 on a rented typewriter in the basement of UCLA\u2019s Powell Library.\n45,Pulitzer Prize for Fiction winners,The Grapes of Wrath,To Kill a Mockingbird,Middlesex,The Road,Moderate,\"Kazuo Ishiguro was born in Nagasaki, Japan.\",Jeffrey Eugenides\u2019s Middlesex won the Pulitzer Prize for Fiction in 2003.,Ray Bradbury wrote Fahrenheit 451 on a rented typewriter in the basement of UCLA\u2019s Powell Library.\n45,One-word titles by women,Beloved,Persuasion,Frankenstein,Middlemarch,Moderate,\"Kazuo Ishiguro was born in Nagasaki, Japan.\",Jeffrey Eugenides\u2019s Middlesex won the Pulitzer Prize for Fiction in 2003.,Ray Bradbury wrote Fahrenheit 451 on a rented typewriter in the basement of UCLA\u2019s Powell Library.\n45,Novels with a number in the title,Slaughterhouse-Five,Catch-22,The Three-Body Problem,Fahrenheit 451,Moderate,\"Kazuo Ishiguro was born in Nagasaki, Japan.\",Jeffrey Eugenides\u2019s Middlesex won the Pulitzer Prize for Fiction in 2003.,Ray Bradbury wrote Fahrenheit 451 on a rented typewriter in the basement of UCLA\u2019s Powell Library.";
+  const games = buildGames(parseCSV(text));
+  if (!games.length){ showError('No valid games were found in the spreadsheet. Each game needs 4 categories with 4 entries each.'); return; }
+
+  const params = new URLSearchParams(location.search);
+  const forced = params.get('game');
+  if (forced && games.find(g => g.id === forced)){
+    isPreview = true; game = games.find(g => g.id === forced);
+    storageKey = 'll:preview:' + forced;
+  } else {
+    periodN = periodNumber();
+    game = games[periodN % games.length];
+    storageKey = 'll:play:' + periodN;
+  }
+  labels = game.cats.flatMap(c => c.entries);
+  $('#gameLabel').textContent = isPreview ? `Preview of puzzle ${game.id} (stats not recorded)` : `Game #${periodN + 1}`;
+
+  state = freshState();
+  const saved = store.get(storageKey);
+  if (saved && saved.hash === state.hash && Array.isArray(saved.order)) state = saved;
+
+  $('#loading').hidden = true; $('#main').hidden = false;
+  render();
+  if (state.status !== 'playing') setTimeout(openResults, 400);
+  else if (!store.get('ll:seenHelp')){ store.set('ll:seenHelp', 1); $('#helpDlg').showModal(); }
+}
+boot();
+})();
+</script>
+</body>
+</html>
