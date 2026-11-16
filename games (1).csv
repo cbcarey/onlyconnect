@@ -1,0 +1,181 @@
+Game,Category,Entry1,Entry2,Entry3,Entry4,Difficulty
+1,19th-century women novelists,Jane Austen,Charlotte Brontë,Emily Brontë,George Eliot,Easy
+1,The Great Gatsby characters,Jay Gatsby,Daisy Buchanan,Nick Carraway,Tom Buchanan,Easy
+1,Booker Prize winners,Midnight’s Children,The Remains of the Day,Life of Pi,Lincoln in the Bardo,Easy
+1,Shakespeare comedies,A Midsummer Night’s Dream,Twelfth Night,Much Ado About Nothing,As You Like It,Easy
+2,Modernist novelists,James Joyce,Virginia Woolf,William Faulkner,Marcel Proust,Moderate
+2,Modernist poets,T.S. Eliot,Ezra Pound,Wallace Stevens,William Carlos Williams,Moderate
+2,Beat Generation writers,Jack Kerouac,Allen Ginsberg,William S. Burroughs,Lawrence Ferlinghetti,Moderate
+2,Harlem Renaissance writers,Langston Hughes,Zora Neale Hurston,Countee Cullen,Claude McKay,Moderate
+3,Books set in London,Mrs Dalloway,Great Expectations,The Picture of Dorian Gray,Neverwhere,Difficult
+3,Novels with a body part in the title,Heart of Darkness,The Handmaid’s Tale,The Bone People,Their Eyes Were Watching God,Difficult
+3,Novels with a compass direction in the title,Northanger Abbey,South Riding,East of Eden,Westward Ho!,Difficult
+3,Novels titled after places/estates,Middlemarch,Wuthering Heights,Mansfield Park,Cranford,Difficult
+4,Science-fiction grandmasters,Isaac Asimov,Arthur C. Clarke,Ursula K. Le Guin,Octavia Butler,Easy
+4,Fictional wizards/mages,Gandalf,Merlin,Albus Dumbledore,Rincewind,Easy
+4,Fictional realms,Narnia,Middle-earth,Wonderland,Oz,Easy
+4,Books with a number in the title,Slaughterhouse-Five,Catch-22,The Three-Body Problem,Fahrenheit 451,Easy
+5,Latin American Boom authors,Gabriel García Márquez,Julio Cortázar,Mario Vargas Llosa,Carlos Fuentes,Moderate
+5,Hamlet characters,Hamlet,Ophelia,Claudius,Gertrude,Moderate
+5,Epistolary novels,Dracula,The Color Purple,Pamela,Les Liaisons Dangereuses,Moderate
+5,Author surnames that are common English words,Swift,Hardy,Wilde,Sharp,Moderate
+6,Dystopian novels,1984,Brave New World,Fahrenheit 451,We,Easy
+6,Fictional detectives,Sherlock Holmes,Hercule Poirot,Miss Marple,Philip Marlowe,Easy
+6,Russian novels,Crime and Punishment,War and Peace,Anna Karenina,The Brothers Karamazov,Easy
+6,Authors known by initials,J.R.R. Tolkien,H.G. Wells,F. Scott Fitzgerald,E.M. Forster,Easy
+7,Hogwarts houses,Gryffindor,Slytherin,Hufflepuff,Ravenclaw,Moderate
+7,Dickens novels,Bleak House,Hard Times,Little Dorrit,Dombey and Son,Moderate
+7,Tom Stoppard plays,Arcadia,Rosencrantz and Guildenstern Are Dead,The Real Thing,Jumpers,Moderate
+7,Fictional Toms (surnames),Sawyer,Ripley,Buchanan,Joad,Moderate
+8,Modernist novels,Ulysses,Mrs Dalloway,To the Lighthouse,The Sound and the Fury,Easy
+8,Authors who used pen names,George Eliot,George Orwell,Lewis Carroll,Mark Twain,Easy
+8,"Shakespeare tragedies, short titles",Hamlet,Othello,King Lear,Macbeth,Easy
+8,Titles with a color word,The Red and the Black,The Color Purple,The White Tiger,The Blue Flower,Easy
+9,Booker Prize winners,Midnight’s Children,The Remains of the Day,Life of Pi,Lincoln in the Bardo,Moderate
+9,Novels with a color word,The Red and the Black,The Color Purple,The White Tiger,The Blue Flower,Moderate
+9,Authors whose surnames are also first names,Joyce,Eliot,Hardy,Wilde,Moderate
+9,Shakespeare comedies,A Midsummer Night’s Dream,Twelfth Night,Much Ado About Nothing,As You Like It,Moderate
+10,Jane Austen heroines,Elizabeth Bennet,Emma Woodhouse,Elinor Dashwood,Anne Elliot,Difficult
+10,Novels set in a single day,Ulysses,Mrs Dalloway,Saturday,Seize the Day,Difficult
+10,Novels with unnamed narrators,Rebecca,Invisible Man,Notes from Underground,Fight Club,Difficult
+10,Two-time Booker Prize winners (surnames),Mantel,Coetzee,Carey,Atwood,Difficult
+11,Beat Generation writers,Jack Kerouac,Allen Ginsberg,William S. Burroughs,Lawrence Ferlinghetti,Easy
+11,Macbeth characters,Macbeth,Lady Macbeth,Banquo,Macduff,Easy
+11,Fictional wizards/mages,Gandalf,Merlin,Albus Dumbledore,Rincewind,Easy
+11,Books with a number in the title,Slaughterhouse-Five,Catch-22,The Three-Body Problem,Fahrenheit 451,Easy
+12,19th-century women novelists,Jane Austen,Charlotte Brontë,Emily Brontë,George Eliot,Moderate
+12,The Great Gatsby characters,Jay Gatsby,Daisy Buchanan,Nick Carraway,Tom Buchanan,Moderate
+12,Nobel laureates in Literature,Toni Morrison,Kazuo Ishiguro,Doris Lessing,W.B. Yeats,Moderate
+12,Novels with a body part in the title,Heart of Darkness,The Handmaid’s Tale,The Bone People,Their Eyes Were Watching God,Moderate
+13,Fictional dogs,Toto,Buck,Nana,Argos,Difficult
+13,Titles taken from Shakespeare,Brave New World,Infinite Jest,Pale Fire,Something Wicked This Way Comes,Difficult
+13,Writers with medical training,Anton Chekhov,Arthur Conan Doyle,William Carlos Williams,John Keats,Difficult
+13,Last lines of famous novels,"So we beat on, boats against the current","After all, tomorrow is another day",He loved Big Brother,Yes I said yes I will Yes,Difficult
+14,Harlem Renaissance writers,Langston Hughes,Zora Neale Hurston,Countee Cullen,Claude McKay,Easy
+14,Pride and Prejudice characters,Elizabeth Bennet,Mr. Darcy,Jane Bennet,Mr. Bingley,Easy
+14,Pulitzer Prize for Fiction winners,The Grapes of Wrath,To Kill a Mockingbird,Middlesex,The Road,Easy
+14,Novels with a color word in the title,The Red and the Black,The Color Purple,The White Tiger,The Blue Flower,Easy
+15,Modernist poets,T.S. Eliot,Ezra Pound,Wallace Stevens,William Carlos Williams,Moderate
+15,Odyssey characters,Odysseus,Penelope,Telemachus,Polyphemus,Moderate
+15,Dystopian novels,1984,Brave New World,Fahrenheit 451,We,Moderate
+15,Novels with a compass direction in the title,Northanger Abbey,South Riding,East of Eden,Westward Ho!,Moderate
+16,Science-fiction grandmasters,Isaac Asimov,Arthur C. Clarke,Ursula K. Le Guin,Octavia Butler,Easy
+16,To Kill a Mockingbird characters,Scout Finch,Atticus Finch,Jem Finch,Boo Radley,Easy
+16,Victorian novels,Great Expectations,Jane Eyre,Middlemarch,Wuthering Heights,Easy
+16,Authors known by initials,J.R.R. Tolkien,H.G. Wells,F. Scott Fitzgerald,E.M. Forster,Easy
+17,Writers famously associated with a single novel,Harper Lee,Emily Brontë,Mary Shelley,Margaret Mitchell,Difficult
+17,Titles that are also common nouns,Beloved,Possession,Persuasion,Restoration,Difficult
+17,Shakespeare plays set in Italy,Romeo and Juliet,The Merchant of Venice,Othello,Much Ado About Nothing,Difficult
+17,Authors with three names,Gabriel García Márquez,William Carlos Williams,Zora Neale Hurston,F. Scott Fitzgerald,Difficult
+18,Latin American Boom authors,Gabriel García Márquez,Julio Cortázar,Mario Vargas Llosa,Carlos Fuentes,Moderate
+18,1984 characters,Winston Smith,Julia,O’Brien,Big Brother,Moderate
+18,Epistolary novels,Dracula,The Color Purple,Pamela,Les Liaisons Dangereuses,Moderate
+18,Author surnames that are common English words,Swift,Hardy,Sharp,Fielding,Moderate
+19,Authors who used pen names,George Eliot,George Orwell,Lewis Carroll,Mark Twain,Easy
+19,Emma characters,Emma Woodhouse,Mr. Knightley,Harriet Smith,Frank Churchill,Easy
+19,Booker Prize winners,Midnight’s Children,The Remains of the Day,Life of Pi,Lincoln in the Bardo,Easy
+19,Books with a number in the title,Slaughterhouse-Five,Catch-22,The Three-Body Problem,Fahrenheit 451,Easy
+20,Irish writers,James Joyce,W.B. Yeats,Oscar Wilde,Samuel Beckett,Moderate
+20,Romeo and Juliet characters,Romeo,Juliet,Mercutio,Tybalt,Moderate
+20,Books set in London,Mrs Dalloway,Great Expectations,The Picture of Dorian Gray,Neverwhere,Moderate
+20,Novels titled after places/estates,Middlemarch,Wuthering Heights,Mansfield Park,Northanger Abbey,Moderate
+21,Beat Generation writers,Jack Kerouac,Allen Ginsberg,William S. Burroughs,Lawrence Ferlinghetti,Easy
+21,Pride and Prejudice surnames,Bennet,Darcy,Bingley,Collins,Easy
+21,Pulitzer Prize for Fiction winners,The Grapes of Wrath,To Kill a Mockingbird,The Road,Middlesex,Easy
+21,One-word novels,Beloved,Possession,Persuasion,Frankenstein,Easy
+22,Fictional mice and rats,Templeton,Reepicheep,Despereaux,Stuart Little,Difficult
+22,Writers with long office day jobs,T. S. Eliot,Anthony Trollope,Franz Kafka,Wallace Stevens,Difficult
+22,Orphans of fiction,Oliver Twist,Jane Eyre,Pip,Anne Shirley,Difficult
+22,Writers named John (surnames),Milton,Steinbeck,Updike,Donne,Difficult
+23,Modernist novelists,James Joyce,Virginia Woolf,William Faulkner,Marcel Proust,Moderate
+23,Hamlet characters,Hamlet,Ophelia,Claudius,Gertrude,Moderate
+23,Shakespeare comedies,A Midsummer Night’s Dream,Twelfth Night,Much Ado About Nothing,As You Like It,Moderate
+23,Novels with a compass direction in the title,Northanger Abbey,South Riding,East of Eden,Westward Ho!,Moderate
+24,Victorian novels,Great Expectations,Jane Eyre,Middlemarch,Wuthering Heights,Easy
+24,Macbeth characters,Macbeth,Lady Macbeth,Banquo,Macduff,Easy
+24,Fictional wizards/mages,Gandalf,Merlin,Albus Dumbledore,Rincewind,Easy
+24,Novels with a body part in the title,Heart of Darkness,The Handmaid’s Tale,The Bone People,Their Eyes Were Watching God,Easy
+25,Latin American Boom authors,Gabriel García Márquez,Julio Cortázar,Carlos Fuentes,José Donoso,Moderate
+25,Authors with three names,William Carlos Williams,Zora Neale Hurston,F. Scott Fitzgerald,Joyce Carol Oates,Moderate
+25,Novels with a color word,The Red and the Black,The Color Purple,The White Tiger,The Blue Flower,Moderate
+25,Epistolary novels,Dracula,The Sorrows of Young Werther,Pamela,Les Liaisons Dangereuses,Moderate
+26,Fictional cats,Cheshire Cat,Crookshanks,Behemoth,Macavity,Difficult
+26,Fictional butlers and valets,Jeeves,Stevens,Bunter,Passepartout,Difficult
+26,Characters with flower first names,Daisy Buchanan,Lily Bart,Violet Beauregarde,Petunia Dursley,Difficult
+26,Pen names of famous authors,Currer Bell,Boz,George Sand,Richard Bachman,Difficult
+27,Harlem Renaissance writers,Langston Hughes,Zora Neale Hurston,Countee Cullen,Claude McKay,Easy
+27,Gothic novels,Frankenstein,Dracula,The Mysteries of Udolpho,The Picture of Dorian Gray,Easy
+27,Fictional realms,Narnia,Middle-earth,Wonderland,Oz,Easy
+27,Poetic forms,sonnet,villanelle,haiku,limerick,Easy
+28,Nobel laureates in Literature,Toni Morrison,Kazuo Ishiguro,Gabriel García Márquez,Doris Lessing,Moderate
+28,Romeo and Juliet characters,Romeo,Juliet,Mercutio,Tybalt,Moderate
+28,Books set in London,Mrs Dalloway,Great Expectations,The Picture of Dorian Gray,Neverwhere,Moderate
+28,Novels titled after places/estates,Middlemarch,Wuthering Heights,Mansfield Park,Northanger Abbey,Moderate
+29,Science-fiction grandmasters,Isaac Asimov,Arthur C. Clarke,Ursula K. Le Guin,Octavia Butler,Easy
+29,To Kill a Mockingbird characters,Scout Finch,Atticus Finch,Jem Finch,Boo Radley,Easy
+29,Novels with a color word in the title,The Red and the Black,The Color Purple,The White Tiger,The Blue Flower,Easy
+29,Authors known by initials,J.R.R. Tolkien,H.G. Wells,F. Scott Fitzgerald,E.M. Forster,Easy
+30,One-word novels,Ulysses,Frankenstein,Rebecca,Dracula,Moderate
+30,Novels whose titles are also common nouns,Beloved,Possession,Persuasion,Restoration,Moderate
+30,Pulitzer Prize for Fiction winners,The Grapes of Wrath,To Kill a Mockingbird,Middlesex,The Road,Moderate
+30,Titles with a color word,The Red and the Black,The Color Purple,The White Tiger,The Blue Flower,Moderate
+31,Dystopian novels,1984,Brave New World,Fahrenheit 451,We,Easy
+31,1984 characters,Winston Smith,Julia,O’Brien,Big Brother,Easy
+31,Russian novels,Crime and Punishment,War and Peace,Anna Karenina,The Brothers Karamazov,Easy
+31,Books with a number in the title,Slaughterhouse-Five,Catch-22,The Three-Body Problem,One Hundred Years of Solitude,Easy
+32,Sherlock Holmes novels,A Study in Scarlet,The Sign of the Four,The Hound of the Baskervilles,The Valley of Fear,Difficult
+32,Fictional teachers,Mr. Chips,Miss Jean Brodie,Miss Honey,Ichabod Crane,Difficult
+32,UK Poets Laureate,Tennyson,Betjeman,Ted Hughes,Carol Ann Duffy,Difficult
+32,Latin American Nobel laureates in Literature,Pablo Neruda,Octavio Paz,Gabriela Mistral,Mario Vargas Llosa,Difficult
+33,Alice in Wonderland characters,White Rabbit,Mad Hatter,Dormouse,Caterpillar,Moderate
+33,Ancient Greek dramatists,Aeschylus,Sophocles,Euripides,Aristophanes,Moderate
+33,Fictional schools,Hogwarts,Lowood,Dotheboys Hall,Malory Towers,Moderate
+33,Shakespeare heroines who disguise as men,Viola,Rosalind,Portia,Imogen,Moderate
+34,Irish writers,James Joyce,Oscar Wilde,Samuel Beckett,Bram Stoker,Easy
+34,Gothic novels,Frankenstein,Dracula,The Mysteries of Udolpho,The Picture of Dorian Gray,Easy
+34,Fictional detectives,Sherlock Holmes,Hercule Poirot,Miss Marple,Philip Marlowe,Easy
+34,Authors who used pen names,George Eliot,George Orwell,Lewis Carroll,Mark Twain,Easy
+35,Hamlet characters,Hamlet,Ophelia,Claudius,Gertrude,Moderate
+35,Macbeth characters,Macbeth,Lady Macbeth,Banquo,Macduff,Moderate
+35,Shakespeare tragedies,Romeo and Juliet,Othello,King Lear,Timon of Athens,Moderate
+35,Shakespeare’s Roman plays,Julius Caesar,Antony and Cleopatra,Coriolanus,Titus Andronicus,Moderate
+36,Fictional sea captains,Captain Ahab,Captain Nemo,Captain Hook,Captain Queeg,Difficult
+36,First lines of famous novels,Call me Ishmael,It was the best of times,Last night I dreamt I went to Manderley again,It is a truth universally acknowledged,Difficult
+36,Writers who drove ambulances in World War I,Ernest Hemingway,John Dos Passos,E. E. Cummings,W. Somerset Maugham,Difficult
+36,Writers named Thomas (surnames),Hardy,Mann,Pynchon,Wolfe,Difficult
+37,Authors known by initials,J.R.R. Tolkien,H.G. Wells,F. Scott Fitzgerald,E.M. Forster,Easy
+37,Authors with three names,Gabriel García Márquez,William Carlos Williams,Zora Neale Hurston,Robert Louis Stevenson,Easy
+37,Booker Prize winners,Midnight’s Children,The Remains of the Day,Life of Pi,Lincoln in the Bardo,Easy
+37,Novels with a number in the title,Slaughterhouse-Five,Catch-22,The Three-Body Problem,Fahrenheit 451,Easy
+38,Pride and Prejudice characters,Elizabeth Bennet,Mr. Darcy,Jane Bennet,Mr. Bingley,Moderate
+38,Emma characters,Emma Woodhouse,Mr. Knightley,Harriet Smith,Frank Churchill,Moderate
+38,Austen novels,Pride and Prejudice,Sense and Sensibility,Mansfield Park,Northanger Abbey,Moderate
+38,Novels titled after places/estates,Middlemarch,Wuthering Heights,Howards End,Brideshead Revisited,Moderate
+39,Fictional horses,Black Beauty,Rocinante,Shadowfax,Boxer,Difficult
+39,Titles taken from the Bible,East of Eden,The Sun Also Rises,"Absalom, Absalom!",Let Us Now Praise Famous Men,Difficult
+39,Titles taken from poems,Things Fall Apart,Tender Is the Night,Far from the Madding Crowd,"Look Homeward, Angel",Difficult
+39,Writers named Henry (surnames),James,Fielding,Miller,Thoreau,Difficult
+40,Fictional ships,Pequod,Hispaniola,Nautilus,Dawn Treader,Moderate
+40,Plays by Chekhov,The Seagull,Uncle Vanya,Three Sisters,The Cherry Orchard,Moderate
+40,Works by T. S. Eliot,The Waste Land,The Hollow Men,Ash-Wednesday,Four Quartets,Moderate
+40,Novels adapted for film by Stanley Kubrick,Lolita,A Clockwork Orange,The Shining,Barry Lyndon,Moderate
+41,Irish writers,James Joyce,W.B. Yeats,Oscar Wilde,Samuel Beckett,Easy
+41,1984 characters,Winston Smith,Julia,O’Brien,Big Brother,Easy
+41,Books with a number in the title,Fahrenheit 451,Slaughterhouse-Five,The Three-Body Problem,Catch-22,Easy
+41,Literary devices,metaphor,simile,alliteration,personification,Easy
+42,Authors who were also spies or intelligence officers,Somerset Maugham,Graham Greene,John le Carré,Ian Fleming,Difficult
+42,Surnames that are also common English verbs,Swift,Hardy,Fielding,Sharp,Difficult
+42,Novels whose titles are also place names,Middlemarch,Mansfield Park,Northanger Abbey,Wuthering Heights,Difficult
+42,Books with a body part in the title,Heart of Darkness,The Handmaid’s Tale,The Bone People,Their Eyes Were Watching God,Difficult
+43,Novels with a compass direction in the title,Northanger Abbey,South Riding,East of Eden,Westward Ho!,Moderate
+43,Books set in London,Mrs Dalloway,Neverwhere,White Teeth,Brick Lane,Moderate
+43,Victorian novels,Great Expectations,Jane Eyre,Middlemarch,Wuthering Heights,Moderate
+43,19th-century women novelists,Jane Austen,Charlotte Brontë,Emily Brontë,George Eliot,Moderate
+44,Shakespeare’s Roman plays,Julius Caesar,Antony and Cleopatra,Coriolanus,Titus Andronicus,Easy
+44,Fictional detectives,Sherlock Holmes,Hercule Poirot,Miss Marple,Philip Marlowe,Easy
+44,Gothic novels,Frankenstein,Dracula,The Mysteries of Udolpho,The Picture of Dorian Gray,Easy
+44,One-word novels,Beloved,Possession,Persuasion,Ulysses,Easy
+45,Nobel laureates in Literature,Toni Morrison,Kazuo Ishiguro,Doris Lessing,W.B. Yeats,Moderate
+45,Pulitzer Prize for Fiction winners,The Grapes of Wrath,To Kill a Mockingbird,Middlesex,The Road,Moderate
+45,One-word titles by women,Beloved,Persuasion,Frankenstein,Middlemarch,Moderate
+45,Novels with a number in the title,Slaughterhouse-Five,Catch-22,The Three-Body Problem,Fahrenheit 451,Moderate
